@@ -56,12 +56,17 @@ public class BotTournament {
                 listOfRanges[index] = range;
             }
             
-            // TODO: This is wrong from below here
             int totalCombinations = 1;
             for (Integer[] range : listOfRanges) {
-                // TODO: Recalculate this, then fix the below logic
-                totalCombinations *= range.length;
+                int start = range[0];
+                int stop = range[1];
+                int step = range[2];
+                totalCombinations *= Math.max(0, Math.ceil((stop - start) / step));
             }
+
+            // TODO: catch the case there is a problem and no combinations
+
+            // TODO: This is wrong from below here
 
             // This is a list containing every possible list made from the values given above
             Integer[][] result = new Integer[totalCombinations][listOfRanges.length];
