@@ -74,13 +74,14 @@ public class BotTournament {
                 Integer[] combination = new Integer[listOfRanges.length];
                 int j = 1;
                 for (int index = 0; index < listOfRanges.length; index ++) {
-                    Integer[] range = listOfRanges[index]
-                    combination[index] = range[(i / j) % range.length]
-                    j *= range.length
+                    Integer[] range = listOfRanges[index];
+                    combination[index] = range[(i / j) % range.length];
+                    j *= range.length;
                 }
                 result[i] = combination;
             }
 
+            // TODO: shouldn't be a return here
             return result;
         
 

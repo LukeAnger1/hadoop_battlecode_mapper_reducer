@@ -1,3 +1,2 @@
-# battlecode_beasts
-Battle code 2023 github repo
-lets go!!!
+This is regression for a hadoop cluster running battlecode
+
