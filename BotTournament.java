@@ -66,7 +66,7 @@ public class BotTournament {
 
             // TODO: catch the case there is a problem and no combinations
 
-            // TODO: This is wrong from below here
+            // TODO: there is repeated code can probaly optimize it
 
             // This is a list containing every possible list made from the values given above
             Integer[][] result = new Integer[totalCombinations][listOfRanges.length];
@@ -75,13 +75,17 @@ public class BotTournament {
                 int j = 1;
                 for (int index = 0; index < listOfRanges.length; index ++) {
                     Integer[] range = listOfRanges[index];
-                    combination[index] = range[(i / j) % range.length];
-                    j *= range.length;
+                    int start = range[0];
+                    int stop = range[1];
+                    int step = range[2];
+                    int range_len = Math.max(0, (int)Math.ceil((stop - start) / step));
+                    combination[index] = start + step * ((i / j) % range_len);
+                    j *= range_len;
                 }
                 result[i] = combination;
             }
 
-            // TODO: shouldn't be a return here
+            // TODO: shouldn't be a return here, make it write to the contest
             return result;
         
 
