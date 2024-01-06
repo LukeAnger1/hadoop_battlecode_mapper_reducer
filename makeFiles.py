@@ -2,10 +2,11 @@
 
 import itertools
 import os
+import random
 
 # file path
 # TODO: Add a condition where folders work by applying to every subfolder and file
-file_path = 'source_file.txt'
+file_path = 'test_file.txt'
 
 # Define the words to be replaced and their corresponding replacement ranges
 original = ['<?var1?>', '<?var2?>', '<?var3?>']
@@ -24,7 +25,8 @@ def get_all_combinations(replace_range):
     return list(itertools.product(*replace_range))
 
 # This will pick random ones within the range
-# TODO: Actually write this function
+def get_rand_combinations(replace_range, number_combination):
+    return random.sample(get_all_combinations(replace_range), number_combination)
 
 def separate_extension(filename):
     root, ext = os.path.splitext(filename)
@@ -32,8 +34,9 @@ def separate_extension(filename):
 
 if __name__ == '__main__':
 
-    # Generate all possible combinations
-    combinations = get_all_combinations(replace_range)
+    # Generate possible combinations
+    # combinations = get_all_combinations(replace_range)
+    combinations = get_rand_combinations(replace_range, 5)
 
     # Open the source file and read its content
     with open(file_path, 'r') as file:
