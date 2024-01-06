@@ -1,6 +1,11 @@
 # https://www.michael-noll.com/tutorials/writing-an-hadoop-mapreduce-program-in-python/ use this website for input
 # Test mapper.py and reducer.py locally first
 
+echo "foo foo quux labs foo bar quux" | python3 /home/hduser/battlecode_beasts/mapper.py
+echo "foo foo quux labs foo bar quux" | python3 /home/hduser/battlecode_beasts/mapper.py | sort -k1,1 | python3 /home/hduser/battlecode_beasts/reducer.py
+
+
+# below is untested and will most likely use python over python3 so try to use the above
 # very basic test
 hduser@ubuntu:~$ echo "foo foo quux labs foo bar quux" | /home/hduser/mapper.py
 foo     1
