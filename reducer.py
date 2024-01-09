@@ -22,7 +22,6 @@ bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2,
 # TODO: The current is just for testing and should be switched later
 bot_source_file_path = "/mnt/c/Users/anger/OneDrive/Desktop/bc/test_file.txt"
 path_to_bot_src_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content
-start_char, end_char = '<?', '?>' # These are the characters the code looks for for replacing words
 
 # Function to replace words
 def replace_words_func(text, original, replace):\
@@ -36,7 +35,7 @@ def replace_words_func(text, original, replace):\
 # This function will get src file and make the one replaced, THIS ADDS THE CHARACTERS
 def make_bot(input_file_path, output_file_path, original_words, replace_words):
     # this adds the characters
-    original_words = [start_char + original_word + end_char for original_word in original_words]
+    # IMPORTANT give them extremely unique names to prevent issues
     with open(input_file_path, 'r') as file:
         file_content = file.read()
     modified_content = replace_words_func(file_content, original_words, replace_words)
