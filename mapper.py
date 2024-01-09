@@ -11,12 +11,12 @@
 # EX:
 # input
 """
-bot1 | map1,      map2,map3, mapy4 | var1 ->     (1, 2, 3)    ,     var2->[1, 2, 3, 4]
-bot2 | map1,      map2,mapy3, map4 | var1 ->     (1, 2, 3)    ,     var2->[1, 2, 3, 4]
+bot1 | map1.      map2.map3. mapy4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]
+bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]
 
 type the below into a terminal
-echo "bot1 | map1,      map2,map3, mapy4 | var1 ->     (1, 2, 3)    ,     var2->[1, 2, 3, 4]
-bot2 | map1,      map2,mapy3, map4 | var1 ->     (1, 2, 3)    ,     var2->[1, 2, 3, 4]" | python3 mapper.py
+echo "bot1 | map1.      map2.map3. mapy4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]
+bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]" | python3 mapper.py
 """
 
 # output
@@ -28,8 +28,10 @@ import itertools
 import random
 
 bot_seperator = '\n'
-bot_info_sperator = '|'
+bot_type_sperator = '|'
+bot_list_seperator = '.'
 vot_var_value_seperator = '->'
+worthless_info = ' '
 
 # This will get a list of every possible combination
 def get_all_combinations_one_bot(replace_range):
@@ -46,10 +48,21 @@ def get_bot():
 if __name__ == '__main__':
 
     for line in sys.stdin:
-        for value in line.split(bot_info_sperator):
+        for value in line.split(bot_type_sperator):
             print(value)
-        bot_name, bot_maps, bot_var_value = line.split(bot_info_sperator)
+        bot_name, bot_maps, bot_var_value = line.split(bot_type_sperator)
+
+        # this is code to get rid of any unnecasry spacing and to convert it to a list
+        def quick_strip(stringy):
+            return [word.strip().replace(worthless_info, '') for word in stringy.split(bot_list_seperator)]
+        bot_name = bot_name.strip()
+        bot_maps = quick_strip(bot_maps)
+        bot_var_value = quick_strip(bot_var_value)
+
+        # this is test code
         print(f'bot name is {bot_name} and bot_maps is {bot_maps} and bot_var_line is {bot_var_value}')
+        # this is test code
+
         """line = re.sub(r'\W+', ' ', line.strip())
         words = line.split()
 
