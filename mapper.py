@@ -93,7 +93,7 @@ if __name__ == '__main__':
     # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for bot1, bot2, in combinations(bots, 2):
         # This is the match
-        print((bot1[0], bot1[2], bot1[3]), (bot2[0], bot2[2], bot2[3]), bot1[1].union(bot2[1]))
+        print(f'{(bot1[0], bot1[2], bot1[3]), (bot2[0], bot2[2], bot2[3]), bot1[1].union(bot2[1])}\t1')
 
     """line = re.sub(r'\W+', ' ', line.strip())
     words = line.split()
