@@ -5,9 +5,9 @@ echo "foo foo quux labs foo bar quux" | python3 /home/hduser/battlecode_beasts/m
 echo "foo foo quux labs foo bar quux" | python3 /home/hduser/battlecode_beasts/mapper.py | sort -k1,1 | python3 /home/hduser/battlecode_beasts/reducer.py
 
 # upload
-hdfs dfs -put /home/hduser/battlecode_beasts/tmp/gutenburg/
+hadoop fs -copyFromLocal  <source_location_in_local filesystem><destination_location_in_HDFS>
 # check if uploaded
-hdfs dfs -ls /home/hduser/battlecode_beasts/tmp/gutenburg/
+hadoop fs -ls /path
 
 # This is a python streaming test that does not work yet, so far the example on https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html is the one that works
 # TODO: prob dont need file flag for mapper, make sure to use relative path absolute causes problems
