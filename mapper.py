@@ -41,10 +41,6 @@ def get_all_combinations_one_bot(replace_range):
 def get_rand_combinations_one_bot(replace_range, number_combination):
     return random.sample(get_all_combinations_one_bot(replace_range), number_combination)
 
-# This will get a list of bot info in the form of (bot1, bot1_maps, [var1, var2, var3, ...], [value1, value2, value3,....]) for each bot
-def get_bot():
-    pass
-
 if __name__ == '__main__':
     bots = [] # this will contain a list of the bots, not necassarily the same file name bot
     for line in sys.stdin:

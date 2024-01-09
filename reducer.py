@@ -3,6 +3,7 @@
 
 from operator import itemgetter
 import sys
+import subprocess
 
 current_word = None
 current_count = 0
@@ -41,6 +42,21 @@ def make_bot(input_file_path, output_file_path, original_words, replace_words):
     modified_content = replace_words_func(file_content, original_words, replace_words)
     with open(output_file_path, 'w') as file:
             file.write(modified_content)
+
+def run_command_in_terminal(command):
+    try:
+        # Run the command
+        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+        # Return the standard output and error
+        return result.stdout, result.stderr
+    except subprocess.CalledProcessError as e:
+        # Return the error message if the command fails
+        return e.stdout, e.stderr
+    
+# TODO: this is the last bit of code it is going to need to return 
+def run_games(match_info):
+    pass
 
 if __name__ == '__main__':
     # testing for bot file writing start
