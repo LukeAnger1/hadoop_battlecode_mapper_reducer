@@ -8,6 +8,16 @@ current_word = None
 current_count = 0
 word = None
 
+# EX
+# input
+"""
+type the below into a terminal
+echo "bot1 | map1.      map2.map3. mapy4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4] . var3->range(1, 2, 3)
+bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]" | python3 mapper.py | python3 reducer.py
+"""
+
+# This is the input ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
+    
 # TODO: The current is just for testing and should be switched later
 bot_source_file_path = "/mnt/c/Users/anger/OneDrive/Desktop/bc/test_file.txt"
 path_to_bot_src_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content
@@ -38,7 +48,10 @@ if __name__ == '__main__':
     # testing for bot file writing end
 
     # input comes from STDIN
-    for line in sys.stdin:
+    for index, line in enumerate(sys.stdin):
+        print(f'line {line} at index {index}')
+
+        """
         # remove leading and trailing whitespace
         line = line.strip()
 
@@ -67,3 +80,4 @@ if __name__ == '__main__':
     # do not forget to output the last word if needed!
     if current_word == word:
         print(f'{current_word}\t{current_count}')
+        """
