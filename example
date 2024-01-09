@@ -11,7 +11,9 @@ hadoop fs -ls /path
 
 # This is a python streaming test that does not work yet, so far the example on https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html is the one that works
 # TODO: prob dont need file flag for mapper, make sure to use relative path absolute causes problems
+# Also note that the shebang is needed in the map and reduce and make it executable
 /home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file mapper.py    -mapper mapper.py -file reducer.py   -reducer reducer.py -input /input -output /out14
+
 # below is untested and will most likely use python over python3 so try to use the above
 # very basic test
 hduser@ubuntu:~$ echo "foo foo quux labs foo bar quux" | /home/hduser/mapper.py
