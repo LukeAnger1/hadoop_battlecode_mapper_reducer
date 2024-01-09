@@ -23,9 +23,9 @@ bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2,
 # *BIG*
 
 import sys
-import re
 import itertools
 import random
+from itertools import combinations
 
 bot_seperator = '\n'
 bot_type_sperator = '|'
@@ -94,7 +94,8 @@ if __name__ == '__main__':
             bots.append((bot_name, bot_maps, vars, combo))
 
     # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-    print(bots)
+    for bot1, bot2, in combinations(bots, 2):
+        print(f'bot1 is {bot1} and bot2 is {bot2}')
 
     """line = re.sub(r'\W+', ' ', line.strip())
     words = line.split()
