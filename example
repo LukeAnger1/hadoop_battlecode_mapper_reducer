@@ -4,21 +4,14 @@
 echo "foo foo quux labs foo bar quux" | python3 /home/hduser/battlecode_beasts/mapper.py
 echo "foo foo quux labs foo bar quux" | python3 /home/hduser/battlecode_beasts/mapper.py | sort -k1,1 | python3 /home/hduser/battlecode_beasts/reducer.py
 
-# TODO: remove the below once the one further down works
-bin/hadoop jar contrib/streaming/hadoop-*streaming*.jar \
--file /home/hduser/battlecode_beasts/mapper.py    -mapper "python3 /home/hduser/battlecode_beasts/mapper.py" \
--file /home/hduser/battlecode_beasts/reducer.py   -reducer "python3 /home/hduser/battlecode_beasts/reducer.py" \
--input /user/hduser/gutenberg/* -output /user/hduser/gutenberg-output
-
 # upload
 hdfs dfs -put /home/hduser/battlecode_beasts/tmp/gutenburg/
 # check if uploaded
 hdfs dfs -ls /home/hduser/battlecode_beasts/tmp/gutenburg/
 
 # This is a python streaming test that does not work yet, so far the example on https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html is the one that works
-# TODO: make implemntation for streaming through python
-/home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file /home/hduser/battlecode_beasts/mapper.py -mapper 'python3 /home/hduser/battlecode_beasts/mapper.py' -file /home/hduser/battlecode_beasts/reducer.py -reducer 'python3 /home/hduser/battlecode_beasts/reducer.py' -input /tmp/1 -output /out3
-
+# TODO: prob dont need file flag for mapper, make sure to use relative path absolute causes problems
+/home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file /home/hduser/battlecode_beasts/mapper.py    -mapper /home/hduser/battlecode_beasts/mapper.py -file /home/hduser/battlecode_beasts/reducer.py   -reducer /home/hduser/battlecode_beasts/reducer.py -input /user/joe/wordcount/input/file01 -output /out13
 
 # below is untested and will most likely use python over python3 so try to use the above
 # very basic test
