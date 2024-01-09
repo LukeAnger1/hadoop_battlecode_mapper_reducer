@@ -48,8 +48,6 @@ def get_bot():
 if __name__ == '__main__':
     bots = [] # this will contain a list of the bots, not necassarily the same file name bot
     for line in sys.stdin:
-        for value in line.split(bot_type_sperator):
-            print(value)
         bot_name, bot_maps, bot_var_value = line.split(bot_type_sperator)
 
         # this is code to get rid of any unnecasry spacing and to convert it to a list
@@ -90,12 +88,12 @@ if __name__ == '__main__':
 
         # This is all possible combinations, probaly going to have to use the random choosing one for big sets
         for combo in get_all_combinations_one_bot(values):
-            print((bot_name, bot_maps, vars, combo))
             bots.append((bot_name, bot_maps, vars, combo))
 
     # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for bot1, bot2, in combinations(bots, 2):
-        print(f'bot1 is {bot1} and bot2 is {bot2}')
+        # This is the match
+        print((bot1[0], bot1[2], bot1[3]), (bot2[0], bot2[2], bot2[3]), bot1[1].union(bot2[1]))
 
     """line = re.sub(r'\W+', ' ', line.strip())
     words = line.split()
