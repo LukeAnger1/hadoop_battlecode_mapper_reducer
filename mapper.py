@@ -56,7 +56,7 @@ if __name__ == '__main__':
         def quick_strip(stringy):
             return [word.strip().replace(worthless_info, '') for word in stringy.split(bot_list_seperator)]
         bot_name = bot_name.strip().replace(worthless_info, '')
-        bot_maps = quick_strip(bot_maps)
+        bot_maps = set(quick_strip(bot_maps))
         bot_var_value = quick_strip(bot_var_value)
 
         # This function takes a string var1 -> [value1, value2, value3] and converts it to a usable tuple
@@ -78,16 +78,26 @@ if __name__ == '__main__':
             return var_name, var_value
 
         bot_var_value = [var_values_extractor(var_value) for var_value in bot_var_value]
+        vars = [var_value[0] for var_value in bot_var_value]
+        values = [var_value[1] for var_value in bot_var_value]
 
         # this is test code
-        # print(f'bot name is {bot_name} and bot_maps is {bot_maps} and bot_var_line is {bot_var_value}')
+        # print(f'bot name is {bot_name} and bot_maps is {bot_maps} and vars is {vars} and values is {values}')
         # this is test code
 
         # We need to expand on the ranges and tuples, so we have a list like below
         # [(botName1, maps1, (var1, var2, var3, var4, var5,...), (value1, value2, value3, value4, value5,...)), (botName1, ...), ..., (botName2,...)]
 
-        """line = re.sub(r'\W+', ' ', line.strip())
-        words = line.split()
+        # This is all possible combinations, probaly going to have to use the random choosing one for big sets
+        for combo in get_all_combinations_one_bot(values):
+            print((bot_name, bot_maps, vars, combo))
+            bots.append((bot_name, bot_maps, vars, combo))
 
-        for word in words:
-            print('{}\t{}'.format(word, 1))"""
+    # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
+    print(bots)
+
+    """line = re.sub(r'\W+', ' ', line.strip())
+    words = line.split()
+
+    for word in words:
+        print('{}\t{}'.format(word, 1))"""
