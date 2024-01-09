@@ -46,7 +46,7 @@ def get_bot():
     pass
 
 if __name__ == '__main__':
-
+    bots = [] # this will contain a list of the bots, not necassarily the same file name bot
     for line in sys.stdin:
         for value in line.split(bot_type_sperator):
             print(value)
@@ -80,8 +80,11 @@ if __name__ == '__main__':
         bot_var_value = [var_values_extractor(var_value) for var_value in bot_var_value]
 
         # this is test code
-        print(f'bot name is {bot_name} and bot_maps is {bot_maps} and bot_var_line is {bot_var_value}')
+        # print(f'bot name is {bot_name} and bot_maps is {bot_maps} and bot_var_line is {bot_var_value}')
         # this is test code
+
+        # We need to expand on the ranges and tuples, so we have a list like below
+        # [(botName1, maps1, (var1, var2, var3, var4, var5,...), (value1, value2, value3, value4, value5,...)), (botName1, ...), ..., (botName2,...)]
 
         """line = re.sub(r'\W+', ' ', line.strip())
         words = line.split()
