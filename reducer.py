@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     # input comes from STDIN
     for index, line in enumerate(sys.stdin):
-        print(f'line {line} at index {index}\t1')
+        print(f'line {line} at index {index}')
 
         """
         # remove leading and trailing whitespace
