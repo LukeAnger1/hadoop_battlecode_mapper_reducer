@@ -2,14 +2,8 @@
 
 # This code expects the sys.stdin to look like the below
 
-# BotName
-# Map1, Map2, Map3, Map4, ...
-# var1 -> range()
-# var2 -> range()
-# var3 -> range()
-
-# Or in one line
-# BotName\nMap1, Map2, Map3, Map4, ...\nvar1 -> range()\nvar2 -> range()\nvar3 -> range()
+# BotName | Map1, Map2, Map3, Map4, ... | var1 -> range() | var2 -> range() | var3 -> range()
+# Then we have multiple lines of this for multiple bots
 
 import sys
 import re
@@ -49,12 +43,13 @@ def get_rand_combinations(replace_range, number_combination):
     return random.sample(get_all_combinations(replace_range), number_combination)
 
 if __name__ == '__main__':
-    # testing remove later
-    make_bot(bot_source_file_path, path_to_bot_src_folder + '/output.txt', ['var1', 'var2'], ['LLLLLL', 'Take the L'])
-    # testing remove later
-    """for line in sys.stdin:
+    # testing for bot file writing start
+    # make_bot(bot_source_file_path, path_to_bot_src_folder + '/output.txt', ['var1', 'var2'], ['LLLLLL', 'Take the L'])
+    # testing for bot file writing end
+
+    for line in sys.stdin:
         line = re.sub(r'\W+', ' ', line.strip())
         words = line.split()
 
         for word in words:
-            print('{}\t{}'.format(word, 1))"""
+            print('{}\t{}'.format(word, 1))
