@@ -14,30 +14,14 @@ hadoop fs -ls /path
 # Also note that the shebang is needed in the map and reduce and make it executable
 /home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file mapper.py    -mapper mapper.py -file reducer.py   -reducer reducer.py -input /user/joe/wordcount/input/file01 -output /out16
 
-# below is untested and will most likely use python over python3 so try to use the above
-# very basic test
-hduser@ubuntu:~$ echo "foo foo quux labs foo bar quux" | /home/hduser/mapper.py
-foo     1
-foo     1
-quux    1
-labs    1
-foo     1
-bar     1
-quux    1
+# The below can test the mapper
+echo "bot1 | map1.      map2.map3. mapy4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4] . var3->range(1, 2, 3)
+bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]" | python3 mapper.py
 
-hduser@ubuntu:~$ echo "foo foo quux labs foo bar quux" | /home/hduser/mapper.py | sort -k1,1 | /home/hduser/reducer.py
-bar     1
-foo     3
-labs    1
-quux    2
+cat test.txt | python3 mapper.py
 
-# using one of the ebooks as example input
-# (see below on where to get the ebooks)
-hduser@ubuntu:~$ cat /tmp/gutenberg/20417-8.txt | /home/hduser/mapper.py
- The     1
- Project 1
- Gutenberg       1
- EBook   1
- of      1
- [...]
- (you get the idea)
+# The below can test the reducer
+echo "bot1 | map1.      map2.map3. mapy4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4] . var3->range(1, 2, 3)
+bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]" | python3 mapper.py | python3 reducer.py
+
+cat test.txt | python3 mapper.py | python3 reducer.py
