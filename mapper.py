@@ -47,7 +47,8 @@ def get_rand_combinations_one_bot(replace_range, number_combination):
 # TODO: The current is just for testing and should be switched later
 folder_with_gradlew = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg"
 bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
-bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content, this is what the game will run
+# IMPORTANT make sure the below file is right it will delete all bots!!!!
+bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg/src" # This is where it puts the modified content, this is what the game will run
 
 # Function to replace words
 def replace_words_func(text, original, replace):\
@@ -78,7 +79,7 @@ def make_bot(input_folder_path, output_folder_path, original_words, replace_word
             with open(output_file_path, 'w') as file:
                 file.write(modified_content)
 
-def unmake_bot(folder_path):
+def unmake_ALL_bots(folder_path):
     # Check if the folder exists
     if not os.path.exists(folder_path):
         print(f"Folder not found: {folder_path}")
@@ -98,13 +99,6 @@ def unmake_bot(folder_path):
             print(f"Item {item_path} successfully deleted.")
         except OSError as e:
             print(f"Error: {item_path} : {e.strerror}")
-
-    # Finally, delete the folder itself
-    try:
-        os.rmdir(folder_path)
-        print(f"Folder {folder_path} successfully deleted.")
-    except OSError as e:
-        print(f"Error: Unable to delete folder {folder_path} : {e.strerror}")
 
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
@@ -143,7 +137,6 @@ if __name__ == '__main__':
         bot1_name = bot1_name_old + 'a'
         bot2_name = bot2_name_old + 'b'
 
-        """
         # this code is to change in in files
         bot1_vars = list(bot1_vars_old)
         bot1_vars.append(bot1_name_old)
@@ -162,10 +155,13 @@ if __name__ == '__main__':
 
         bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
-        """
-        print('here')
+        
+        # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
         print(f'the results are {results}')
+
+
+        unmake_ALL_bots(bot_source_file_folder)
 
         """
         add new_bot_name
