@@ -150,8 +150,8 @@ if __name__ == '__main__':
 
         bot1_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot1_name_old
         bot1_output_folder = bot_source_file_folder + '/' + bot1_name
-        bot2_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot1_name_old
-        bot2_output_folder = bot_source_file_folder + '/' + bot1_name
+        bot2_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot2_name_old
+        bot2_output_folder = bot_source_file_folder + '/' + bot2_name
 
         bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
@@ -161,7 +161,7 @@ if __name__ == '__main__':
         print(f'the results are {results}')
 
 
-        unmake_ALL_bots(bot_source_file_folder)
+        # unmake_ALL_bots(bot_source_file_folder)
 
         """
         add new_bot_name
