@@ -25,13 +25,18 @@ bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2,
 import sys
 import itertools
 import random
-from itertools import combinations
+import subprocess
+import os
+import shutil
+import re
 
 bot_seperator = '\n'
 bot_type_sperator = '|'
 bot_list_seperator = '.'
 bot_var_value_seperator = '->'
 worthless_info = ' '
+
+points = 1
 
 # This will get a list of every possible combination
 def get_all_combinations_one_bot(replace_range):
@@ -40,59 +45,151 @@ def get_all_combinations_one_bot(replace_range):
 # This will pick random ones within the range
 def get_rand_combinations_one_bot(replace_range, number_combination):
     return random.sample(get_all_combinations_one_bot(replace_range), number_combination)
+    
+# TODO: The current is just for testing and should be switched later
+folder_with_gradlew = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg"
+bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
+# IMPORTANT make sure the below file is right it will delete all bots!!!!
+bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg/src" # This is where it puts the modified content, this is what the game will run
+
+# Function to replace words
+def replace_words_func(text, original, replace):\
+    # This is to make sure original and replace is some sort of list
+    assert not isinstance(original, str) and not isinstance(replace, str)
+    # This will take text and two lists, and replace the original with the replacement
+    for old_word, new_word in zip(original, replace):
+        text = text.replace(old_word, str(new_word))
+    return text
+
+def make_bot(input_folder_path, output_folder_path, original_words, replace_words):
+    # Check if the output folder exists, if not, create it
+    if not os.path.exists(output_folder_path):
+        os.makedirs(output_folder_path)
+
+    # Iterate over all files in the input folder
+    for filename in os.listdir(input_folder_path):
+        input_file_path = os.path.join(input_folder_path, filename)
+
+        # Check if it's a file and not a directory
+        if os.path.isfile(input_file_path):
+            with open(input_file_path, 'r') as file:
+                file_content = file.read()
+
+            modified_content = replace_words_func(file_content, original_words, replace_words)
+
+            output_file_path = os.path.join(output_folder_path, filename)
+            with open(output_file_path, 'w') as file:
+                file.write(modified_content)
+
+def unmake_ALL_bots(folder_path):
+    # Check if the folder exists
+    if not os.path.exists(folder_path):
+        # print(f"Folder not found: {folder_path}")
+        return
+
+    # Iterate over all items in the folder
+    for item in os.listdir(folder_path):
+        item_path = os.path.join(folder_path, item)
+
+        # Check if it's a file or directory
+        try:
+            if os.path.isfile(item_path):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                # Recursively delete directory contents
+                shutil.rmtree(item_path)
+            # print(f"Item {item_path} successfully deleted.")
+        except OSError as e:
+            # print(f"Error: {item_path} : {e.strerror}")
+            pass
+
+def run_command_in_terminal(command, directory=folder_with_gradlew):
+    try:
+        # Run the command
+        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, stdin=subprocess.DEVNULL, cwd=directory)
+
+        # Return the standard output and error
+        return result.stdout, result.stderr
+    except subprocess.CalledProcessError as e:
+        # Return the error message if the command fails
+        return e.stdout, e.stderr
+    
+# TODO: this is the last bit of code it is going to need to return 
+def run_games(bot1_name, bot2_name, maps):
+    # This is what input should look like, not a string ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
+    results = ""
+    for map in maps:
+        # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
+        results+=repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+    return results
+
+def extract_winner(text):
+    # Regular expression pattern to match the winner announcement
+    pattern = r"\[server\]\s+([^\s]+)\s+\(.\)\s+wins"
+    
+    # Search for the pattern in the text
+    match = re.search(pattern, text)
+    
+    # If a match is found, return the winner's name
+    if match:
+        return match.group(1)
+    else:
+        return "Winner not found"
+
+# The below is an example command to run games
+# print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
 
 if __name__ == '__main__':
-    bots = [] # this will contain a list of the bots, not necassarily the same file name bot
+    # each line is match info ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for line in sys.stdin:
-        bot_name, bot_maps, bot_var_value = line.split(bot_type_sperator)
+        bot1_info_old, bot2_info_old, maps = eval(line)
 
-        # this is code to get rid of any unnecasry spacing and to convert it to a list
-        def quick_strip(stringy):
-            return [word.strip().replace(worthless_info, '') for word in stringy.split(bot_list_seperator)]
-        bot_name = bot_name.strip().replace(worthless_info, '')
-        bot_maps = set(quick_strip(bot_maps))
-        bot_var_value = quick_strip(bot_var_value)
+        bot1_name_old, bot1_vars_old, bot1_combo_old = bot1_info_old
+        bot2_name_old, bot2_vars_old, bot2_combo_old = bot2_info_old
 
-        # This function takes a string var1 -> [value1, value2, value3] and converts it to a usable tuple
-        def var_values_extractor(input, bot_var_value_seperator=bot_var_value_seperator):
-            # Split the string at '->' or bot_var_value_seperator
-            var_name, var_value_str = input.split(bot_var_value_seperator)
+        # this is to rename bots to prevent conflict
+        bot1_name = bot1_name_old + 'a'
+        bot2_name = bot2_name_old + 'b'
 
-            # Strip whitespace from the variable name
-            var_name = var_name.strip().replace(worthless_info, '')
+        # this code is to change in in files
+        bot1_vars = list(bot1_vars_old)
+        bot1_vars.append(bot1_name_old)
+        bot1_combo = list(bot1_combo_old)
+        bot1_combo.append(bot1_name)
 
-            # Use eval to convert the right-hand side string into a Python object
-            # It's important to use eval carefully as it can execute arbitrary code
-            # Here, we restrict its use to safe types (list, tuple, range)
-            if var_value_str.strip().startswith(('(', '[', 'range')):
-                var_value = eval(var_value_str.strip())
+        bot2_vars = list(bot2_vars_old)
+        bot2_vars.append(bot2_name_old)
+        bot2_combo = list(bot2_combo_old)
+        bot2_combo.append(bot2_name)
+
+        bot1_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot1_name_old
+        bot1_output_folder = bot_source_file_folder + '/' + bot1_name
+        bot2_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot2_name_old
+        bot2_output_folder = bot_source_file_folder + '/' + bot2_name
+
+        unmake_ALL_bots(bot_source_file_folder)
+
+        bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
+        bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
+        
+        # TODO: cut these results somewhere, either here or in the reduce
+        results = run_games(bot1_name, bot2_name, maps)
+        winner = extract_winner(results)
+        
+        if not winner == "Winner not found":
+
+            key1 = (bot1_name, bot1_vars_old, bot1_combo_old)
+            key2 = (bot2_name, bot2_vars_old, bot2_combo_old)
+
+            if winner == bot1_name:
+                win_key=key1
+                los_key=key2
             else:
-                raise ValueError("Unsupported value format")
+                win_key=key2
+                los_key=key1
+            
+            # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
+            print('{}\t{}'.format(str(win_key), 1))
+            print('{}\t{}'.format(str(los_key), -1))
 
-            return var_name, var_value
-
-        bot_var_value = [var_values_extractor(var_value) for var_value in bot_var_value]
-        vars = [var_value[0] for var_value in bot_var_value]
-        values = [var_value[1] for var_value in bot_var_value]
-
-        # this is test code
-        # print(f'bot name is {bot_name} and bot_maps is {bot_maps} and vars is {vars} and values is {values}')
-        # this is test code
-
-        # We need to expand on the ranges and tuples, so we have a list like below
-        # [(botName1, maps1, (var1, var2, var3, var4, var5,...), (value1, value2, value3, value4, value5,...)), (botName1, ...), ..., (botName2,...)]
-
-        # This is all possible combinations, probaly going to have to use the random choosing one for big sets
-        for combo in get_all_combinations_one_bot(values):
-            bots.append((bot_name, bot_maps, vars, combo))
-
-    # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-    for bot1, bot2, in combinations(bots, 2):
-        # This is the match, repr is to convert to string
-        print(repr(((bot1[0], bot1[2], bot1[3]), (bot2[0], bot2[2], bot2[3]), bot1[1].union(bot2[1]))))
-
-    """line = re.sub(r'\W+', ' ', line.strip())
-    words = line.split()
-
-    for word in words:
-        print('{}\t{}'.format(word, 1))"""
+    
