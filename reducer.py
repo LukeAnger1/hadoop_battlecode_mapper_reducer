@@ -4,6 +4,7 @@
 from operator import itemgetter
 import sys
 import subprocess
+import os
 
 current_word = None
 current_count = 0
@@ -42,6 +43,17 @@ def make_bot(input_file_path, output_file_path, original_words, replace_words):
     modified_content = replace_words_func(file_content, original_words, replace_words)
     with open(output_file_path, 'w') as file:
             file.write(modified_content)
+
+def unmake_bot(file_path):
+    return unmake_bots([file_path])
+
+def unmake_bots(file_paths):
+    for file_path in file_paths:
+        try:
+            os.remove(file_path)
+            print(f"File {file_path} successfully deleted.")
+        except OSError as e:
+            print(f"Error: {file_path} : {e.strerror}")
 
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
