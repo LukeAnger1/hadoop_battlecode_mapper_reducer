@@ -46,7 +46,7 @@ def get_rand_combinations_one_bot(replace_range, number_combination):
     
 # TODO: The current is just for testing and should be switched later
 folder_with_gradlew = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg"
-bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc/Lv1" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
+bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
 bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content, this is what the game will run
 
 # Function to replace words
@@ -118,11 +118,8 @@ def run_command_in_terminal(command, directory=folder_with_gradlew):
         return e.stdout, e.stderr
     
 # TODO: this is the last bit of code it is going to need to return 
-def run_games(match_info):
+def run_games(bot1_name, bot2_name, maps):
     # This is what input should look like, not a string ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-    bot1_name = match_info[0][0]
-    bot2_name = match_info[1][0]
-    maps = match_info[2]
     results = ""
     for map in maps:
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
@@ -137,6 +134,43 @@ def run_games(match_info):
 if __name__ == '__main__':
     # each line is match info ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for line in sys.stdin:
-        print(eval(line))
+        bot1_info_old, bot2_info_old, maps = eval(line)
+
+        bot1_name_old, bot1_vars_old, bot1_combo_old = bot1_info_old
+        bot2_name_old, bot2_vars_old, bot2_combo_old = bot2_info_old
+
+        # this is to rename bots to prevent conflict
+        bot1_name = bot1_name_old + 'a'
+        bot2_name = bot2_name_old + 'b'
+
+        # this code is to change in in files
+        bot1_vars = list(bot1_vars_old)
+        bot1_vars.append(bot1_name_old)
+        bot1_combo = list(bot1_combo_old)
+        bot1_combo.append(bot1_name)
+
+        bot2_vars = list(bot2_vars_old)
+        bot2_vars.append(bot2_name_old)
+        bot2_combo = list(bot2_combo_old)
+        bot2_combo.append(bot2_name)
+
+        bot1_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot1_name_old
+        bot1_output_folder = bot_source_file_folder + '/' + bot1_name
+        bot2_input_folder = bot_source_file_folder_with_dummy_variables + '/' + bot1_name_old
+        bot2_output_folder = bot_source_file_folder + '/' + bot1_name
+
+        bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
+        bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
+
+        results = run_games()
+
+        """
+        add new_bot_name
+        make_bot
+        make_bot
+        run_game
+        unmake_bot
+        unmake_bot
+        """
 
     
