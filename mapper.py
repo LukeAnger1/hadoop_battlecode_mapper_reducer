@@ -25,10 +25,10 @@ bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2,
 import sys
 import itertools
 import random
-from itertools import combinations
 import subprocess
 import os
 import shutil
+import re
 
 bot_seperator = '\n'
 bot_type_sperator = '|'
@@ -121,7 +121,18 @@ def run_games(bot1_name, bot2_name, maps):
         results+=repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
     return results
 
-
+def extract_winner(text):
+    # Regular expression pattern to match the winner announcement
+    pattern = r"\[server\]\s+([^\s]+)\s+\(.\)\s+wins"
+    
+    # Search for the pattern in the text
+    match = re.search(pattern, text)
+    
+    # If a match is found, return the winner's name
+    if match:
+        return match.group(1)
+    else:
+        return "Winner not found"
 
 # The below is an example command to run games
 # print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
@@ -159,8 +170,8 @@ if __name__ == '__main__':
         
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
-        print(f'the results are {results}')
-
+        winner = extract_winner(results)
+        print(f'the winner is {winner} of type {type(winner)}')
 
         unmake_ALL_bots(bot_source_file_folder)
 
