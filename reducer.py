@@ -5,10 +5,7 @@ from operator import itemgetter
 import sys
 import subprocess
 import os
-
-current_word = None
-current_count = 0
-word = None
+import shutil
 
 # EX
 # input
@@ -34,26 +31,54 @@ def replace_words_func(text, original, replace):\
         text = text.replace(old_word, str(new_word))
     return text
 
-# This function will get src file and make the one replaced, THIS ADDS THE CHARACTERS
-def make_bot(input_file_path, output_file_path, original_words, replace_words):
-    # this adds the characters
-    # IMPORTANT give them extremely unique names to prevent issues
-    with open(input_file_path, 'r') as file:
-        file_content = file.read()
-    modified_content = replace_words_func(file_content, original_words, replace_words)
-    with open(output_file_path, 'w') as file:
-            file.write(modified_content)
+def make_bot(input_folder_path, output_folder_path, original_words, replace_words):
+    # Check if the output folder exists, if not, create it
+    if not os.path.exists(output_folder_path):
+        os.makedirs(output_folder_path)
 
-def unmake_bot(file_path):
-    return unmake_bots([file_path])
+    # Iterate over all files in the input folder
+    for filename in os.listdir(input_folder_path):
+        input_file_path = os.path.join(input_folder_path, filename)
 
-def unmake_bots(file_paths):
-    for file_path in file_paths:
+        # Check if it's a file and not a directory
+        if os.path.isfile(input_file_path):
+            with open(input_file_path, 'r') as file:
+                file_content = file.read()
+
+            modified_content = replace_words_func(file_content, original_words, replace_words)
+
+            output_file_path = os.path.join(output_folder_path, filename)
+            with open(output_file_path, 'w') as file:
+                file.write(modified_content)
+
+def unmake_bot(folder_path):
+    # Check if the folder exists
+    if not os.path.exists(folder_path):
+        print(f"Folder not found: {folder_path}")
+        return
+
+    # Iterate over all items in the folder
+    for item in os.listdir(folder_path):
+        item_path = os.path.join(folder_path, item)
+
+        # Check if it's a file or directory
         try:
-            os.remove(file_path)
-            print(f"File {file_path} successfully deleted.")
+            if os.path.isfile(item_path):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                # Recursively delete directory contents
+                shutil.rmtree(item_path)
+            print(f"Item {item_path} successfully deleted.")
         except OSError as e:
-            print(f"Error: {file_path} : {e.strerror}")
+            print(f"Error: {item_path} : {e.strerror}")
+
+    # Finally, delete the folder itself
+    try:
+        os.rmdir(folder_path)
+        print(f"Folder {folder_path} successfully deleted.")
+    except OSError as e:
+        print(f"Error: Unable to delete folder {folder_path} : {e.strerror}")
+
 
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
@@ -88,7 +113,12 @@ if __name__ == '__main__':
 
     # input comes from STDIN
     for index, line in enumerate(sys.stdin):
-        print(f'line {eval(line)} at index {index}')
+        # This is the input ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
+        match_info = eval(line)
+        """make_bot()
+        make_bot()
+        run_games()
+        unmake_bots()"""
 
         """
         # remove leading and trailing whitespace
