@@ -135,7 +135,7 @@ if __name__ == '__main__':
     # each line is match info ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for line in sys.stdin:
         bot1_info_old, bot2_info_old, maps = eval(line)
-
+        print(f' the info is {eval(line)}')
         bot1_name_old, bot1_vars_old, bot1_combo_old = bot1_info_old
         bot2_name_old, bot2_vars_old, bot2_combo_old = bot2_info_old
 
@@ -143,6 +143,7 @@ if __name__ == '__main__':
         bot1_name = bot1_name_old + 'a'
         bot2_name = bot2_name_old + 'b'
 
+        """
         # this code is to change in in files
         bot1_vars = list(bot1_vars_old)
         bot1_vars.append(bot1_name_old)
@@ -161,8 +162,10 @@ if __name__ == '__main__':
 
         bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
-
-        results = run_games()
+        """
+        print('here')
+        results = run_games(bot1_name, bot2_name, maps)
+        print(f'the results are {results}')
 
         """
         add new_bot_name
