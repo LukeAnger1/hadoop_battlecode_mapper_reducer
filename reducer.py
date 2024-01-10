@@ -20,8 +20,9 @@ bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2,
 # This is the input ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     
 # TODO: The current is just for testing and should be switched later
-bot_source_file_path = "/mnt/c/Users/anger/OneDrive/Desktop/bc/test_file.txt"
-path_to_bot_src_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content
+folder_with_gradlew = ""
+bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc/test_file.txt" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
+bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content, this is what the game will run
 
 # Function to replace words
 def replace_words_func(text, original, replace):\
@@ -55,7 +56,14 @@ def run_command_in_terminal(command):
     
 # TODO: this is the last bit of code it is going to need to return 
 def run_games(match_info):
-    pass
+    # This is what input should look like, not a string ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
+    bot1_name = match_info[0][0]
+    bot2_name = match_info[1][0]
+    maps = match_info[2]
+    results = ""
+    for map in maps:
+        results+=run_command_in_terminal(f'.{folder_with_gradlew}/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
+    return results
 
 if __name__ == '__main__':
     # testing for bot file writing start
