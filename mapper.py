@@ -36,6 +36,8 @@ bot_list_seperator = '.'
 bot_var_value_seperator = '->'
 worthless_info = ' '
 
+points = 1
+
 # This will get a list of every possible combination
 def get_all_combinations_one_bot(replace_range):
     return list(itertools.product(*replace_range))
@@ -173,15 +175,21 @@ if __name__ == '__main__':
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
         winner = extract_winner(results)
-        print(f'the winner is {winner} of type {type(winner)}')
+        
+        if not winner == "Winner not found":
 
-        """
-        add new_bot_name
-        make_bot
-        make_bot
-        run_game
-        unmake_bot
-        unmake_bot
-        """
+            key1 = (bot1_name, bot1_vars_old, bot1_combo_old)
+            key2 = (bot2_name, bot2_vars_old, bot2_combo_old)
+
+            if winner == bot1_name:
+                win_key=key1
+                los_key=key2
+            else:
+                win_key=key2
+                los_key=key1
+            
+            # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
+            print('{}\t{}'.format(str(win_key), 1))
+            print('{}\t{}'.format(str(los_key), -1))
 
     
