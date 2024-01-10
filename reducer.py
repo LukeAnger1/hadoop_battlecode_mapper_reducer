@@ -20,7 +20,7 @@ bot2 | map1.      map2.mapy3. map4 | var1 ->     (1, 2, 3)    .     var2->[1, 2,
 # This is the input ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     
 # TODO: The current is just for testing and should be switched later
-folder_with_gradlew = ""
+folder_with_gradlew = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg"
 bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc/test_file.txt" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
 bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # This is where it puts the modified content, this is what the game will run
 
@@ -43,10 +43,10 @@ def make_bot(input_file_path, output_file_path, original_words, replace_words):
     with open(output_file_path, 'w') as file:
             file.write(modified_content)
 
-def run_command_in_terminal(command):
+def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
         # Run the command
-        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=directory)
 
         # Return the standard output and error
         return result.stdout, result.stderr
@@ -62,8 +62,12 @@ def run_games(match_info):
     maps = match_info[2]
     results = ""
     for map in maps:
-        results+=run_command_in_terminal(f'.{folder_with_gradlew}/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
+        # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
+        results+=repr(run_command_in_terminal(f'{folder_with_gradlew}/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
     return results
+
+# The below is an example command to run games
+# print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
 
 if __name__ == '__main__':
     # testing for bot file writing start
