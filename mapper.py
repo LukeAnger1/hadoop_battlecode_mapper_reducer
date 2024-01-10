@@ -161,7 +161,7 @@ if __name__ == '__main__':
         print(f'the results are {results}')
 
 
-        # unmake_ALL_bots(bot_source_file_folder)
+        unmake_ALL_bots(bot_source_file_folder)
 
         """
         add new_bot_name
