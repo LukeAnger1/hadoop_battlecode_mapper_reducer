@@ -62,11 +62,11 @@ if __name__ == '__main__':
         for combo in get_all_combinations_one_bot(values):
             bots.append((bot_name, bot_maps, vars, combo))
         
-        matches = []
         # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-        for bot1, bot2, in combinations(bots, 2):
-            # This is the input ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-            matches.append(((bot1[0], bot1[2], bot1[3]), (bot2[0], bot2[2], bot2[3]), bot1[1].union(bot2[1])))
-
         with open("matches", 'w') as file:
-            file.write(repr(matches))
+            for bot1, bot2 in combinations(bots, 2):
+                # This is the input ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
+                match = ((bot1[0], bot1[2], bot1[3]), (bot2[0], bot2[2], bot2[3]), bot1[1].union(bot2[1]))
+                file.write(repr(match) + "\n")  # Adding '\n' for a newline
+
+        
