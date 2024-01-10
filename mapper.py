@@ -82,7 +82,7 @@ def make_bot(input_folder_path, output_folder_path, original_words, replace_word
 def unmake_ALL_bots(folder_path):
     # Check if the folder exists
     if not os.path.exists(folder_path):
-        print(f"Folder not found: {folder_path}")
+        # print(f"Folder not found: {folder_path}")
         return
 
     # Iterate over all items in the folder
@@ -96,9 +96,10 @@ def unmake_ALL_bots(folder_path):
             elif os.path.isdir(item_path):
                 # Recursively delete directory contents
                 shutil.rmtree(item_path)
-            print(f"Item {item_path} successfully deleted.")
+            # print(f"Item {item_path} successfully deleted.")
         except OSError as e:
-            print(f"Error: {item_path} : {e.strerror}")
+            # print(f"Error: {item_path} : {e.strerror}")
+            pass
 
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
@@ -129,7 +130,7 @@ if __name__ == '__main__':
     # each line is match info ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for line in sys.stdin:
         bot1_info_old, bot2_info_old, maps = eval(line)
-        print(f' the info is {eval(line)}')
+
         bot1_name_old, bot1_vars_old, bot1_combo_old = bot1_info_old
         bot2_name_old, bot2_vars_old, bot2_combo_old = bot2_info_old
 
