@@ -41,7 +41,6 @@ public strictfp class Communication {
                 }
             }
         }
-        if (closestLocation != null) System.out.println("Closest enemy spawn location is " + closestLocation.toString());
         return closestLocation;
     }
 

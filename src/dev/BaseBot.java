@@ -3,14 +3,15 @@ package dev;
 import battlecode.common.*;
 import dev.Communication.Role;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
-import static RoleSplitPlayer.BaseBot.spawnLocationGroupFinder;
+import static dev.Communication.getUnderAttackLocation;
+import static dev.Communication.underAttack;
 import static dev.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
 import static dev.Moves.Build.fillEverything;
 import static dev.Moves.Build.goToNearbyCrumbsAndFillWater;
 import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
+import static dev.Moves.Utils.spawnLocationGroupFinder;
 import static dev.RobotPlayer.directions;
 import static dev.RobotPlayer.rng;
 
@@ -34,7 +35,7 @@ public class BaseBot {
 
     public int duckNumber = 0;
 
-    static public ArrayList<MapLocation> spawns = null;
+    static public MapLocation[] spawns = null;
 
     public void firstTurn(RobotController rc) throws GameActionException {
         firstSpawn(rc, duckNumber);
@@ -151,7 +152,7 @@ public class BaseBot {
         spawns = spawnLocationGroupFinder(rc);
 
         // gets the next spawn from the last
-        MapLocation spawnWeWant = spawns.get(duckNumber % 3);
+        MapLocation spawnWeWant = spawns[duckNumber % 3];
 
 
         for (MapLocation loc : spawnLocs) {
@@ -166,15 +167,44 @@ public class BaseBot {
     }
 
     public static void spawn(RobotController rc, int duckNumber) throws GameActionException {
-        firstSpawn(rc, duckNumber);
-        MapLocation[] spawnLocs = rc.getAllySpawnLocations();
-        for (MapLocation loc : spawnLocs) {
-            if (rc.canSpawn(loc)) {
-                spawnLocation = loc;
-                oppositeOfSpawnLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, rc.getMapHeight() - loc.y - 1);
-                horizontalMirrorLocation = new MapLocation(loc.x, rc.getMapHeight() - loc.y - 1);
-                verticalMirrorLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, loc.y);
-                rc.spawn(loc);
+        if (underAttack(rc)) { // if under attack spawn near the action
+            underAttackSpawn(rc);
+        } else { // if not under attack spawn at your designated spawn
+            firstSpawn(rc, duckNumber);
+        }
+
+        // brute force if we havent spawned yet
+        if (!rc.isSpawned()) {
+            MapLocation[] spawnLocs = rc.getAllySpawnLocations();
+            for (MapLocation loc : spawnLocs) {
+                if (rc.canSpawn(loc)) {
+                    spawnLocation = loc;
+                    oppositeOfSpawnLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, rc.getMapHeight() - loc.y - 1);
+                    horizontalMirrorLocation = new MapLocation(loc.x, rc.getMapHeight() - loc.y - 1);
+                    verticalMirrorLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, loc.y);
+                    rc.spawn(loc);
+                }
+            }
+        }
+    }
+
+    private static void underAttackSpawn(RobotController rc) throws GameActionException {
+        MapLocation underAttackLocation = getUnderAttackLocation(rc);
+        MapLocation[] spawnLocations = spawnLocationGroupFinder(rc);
+        MapLocation[] allSpawnLocations = rc.getAllySpawnLocations();
+        // find if one of the 3 is near the action
+        for (MapLocation spawnCandidate: spawnLocations){
+            if (spawnCandidate.distanceSquaredTo(underAttackLocation) < 25){
+
+                for (MapLocation loc : allSpawnLocations) {
+                    if (loc.isWithinDistanceSquared(spawnCandidate, 8) && rc.canSpawn(loc)) {
+                        spawnLocation = loc;
+                        oppositeOfSpawnLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, rc.getMapHeight() - loc.y - 1);
+                        horizontalMirrorLocation = new MapLocation(loc.x, rc.getMapHeight() - loc.y - 1);
+                        verticalMirrorLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, loc.y);
+                        rc.spawn(loc);
+                    }
+                }
             }
         }
     }
@@ -238,11 +268,12 @@ public class BaseBot {
         if (closestFlag != null) {
             navigateTo(rc, closestFlag.getLocation());
             MapLocation closestFlagLoc = closestFlag.getLocation();
-            if (rc.canPickupFlag(closestFlagLoc)){
+            if (rc.canPickupFlag(closestFlagLoc)) {
                 rc.pickupFlag(closestFlagLoc);
             }
         }
     }
+
     public static void goToAndPickUpEnemyFlag(RobotController rc) throws GameActionException {
         FlagInfo[] flags = rc.senseNearbyFlags(-1, rc.getTeam().opponent());
         // maintain closest flag in case we can't pick any up so that we can move towards it

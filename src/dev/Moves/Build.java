@@ -1,6 +1,7 @@
 package dev.Moves;
 
 import battlecode.common.*;
+import dev.Parameters;
 
 import static dev.Moves.Utils.getAverageEnemyLocation;
 
@@ -19,7 +20,7 @@ public class Build {
 
     public static void goToNearbyCrumbsAndFillWater(RobotController rc) throws GameActionException {
         MapLocation[] nearbyCrumbs = rc.senseNearbyCrumbs(-1);
-        int closestCrumbDist = 7200;
+        int closestCrumbDist = Parameters.MAX_DIST;
         MapLocation closestCrumb = null;
         MapLocation loc = rc.getLocation();
 
@@ -68,7 +69,7 @@ public class Build {
 
         MapInfo[] possibleBuildSpots = rc.senseNearbyMapInfos(GameConstants.INTERACT_RADIUS_SQUARED);
         MapLocation closestToAvg = null;
-        int closestToAvgDist = 7200;
+        int closestToAvgDist = Parameters.MAX_DIST;
 
         for (MapInfo buildSpot : possibleBuildSpots){
             MapLocation buildLoc = buildSpot.getMapLocation();

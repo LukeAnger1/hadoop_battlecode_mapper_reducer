@@ -82,7 +82,7 @@ public class Heal {
     }
 
     public static void healLowestAllyInRange(RobotController rc) throws GameActionException{
-        RobotInfo[] allyRobots = rc.senseNearbyRobots(GameConstants.HEAL_RADIUS_SQUARED, L.RobotPlayer.ourTeam);
+        RobotInfo[] allyRobots = rc.senseNearbyRobots(GameConstants.HEAL_RADIUS_SQUARED, rc.getTeam());
         MapLocation bestAllyLoc = null;
         int lowestHealth = Integer.MAX_VALUE;
         for (int i = 0; i < allyRobots.length; i++){

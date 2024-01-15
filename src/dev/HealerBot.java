@@ -8,9 +8,15 @@ import static dev.Moves.Build.fillEverything;
 import static dev.Moves.Build.goToNearbyCrumbsAndFillWater;
 import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
 import static dev.Moves.Movement.*;
+
+import static dev.Moves.Defend.*;
+
 import static dev.Moves.Utils.getNumberOfNearbyTeammates;
 import static dev.Moves.Utils.getNumberofNearbyEnemies;
+
 import static dev.RobotPlayer.rng;
+import static dev.Moves.Utils.getNumberOfNearbyTeammates;
+import static dev.Moves.Utils.getNumberofNearbyEnemies;
 
 public class HealerBot extends BaseBot {
 
@@ -36,6 +42,7 @@ public class HealerBot extends BaseBot {
 
         if (rc.isSpawned()){
             updateSymmetry(rc);
+            // alert of (approx) spawn loc under attack if enough enemies are nearby
 
             // pick up any we are in range for and head back
             pickUpFlags(rc);
@@ -44,6 +51,7 @@ public class HealerBot extends BaseBot {
                 navigateTo(rc, getClosestSpawnLocation(rc));
             }
 
+            
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
             // fight
@@ -65,6 +73,7 @@ public class HealerBot extends BaseBot {
 
 
             moveRandomly(rc);
+            Communication.markUnderAttackLocationAsFree(rc);
         }
     }
 

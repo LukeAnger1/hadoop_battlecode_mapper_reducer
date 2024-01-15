@@ -56,6 +56,7 @@ public class AttackerBot extends BaseBot {
                 navigateTo(rc, getClosestSpawnLocation(rc));
             }
 
+            
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
             // fight
@@ -77,6 +78,7 @@ public class AttackerBot extends BaseBot {
 
 
             moveRandomly(rc);
+            Communication.markUnderAttackLocationAsFree(rc);
         }
 
         rc.setIndicatorString("AttackerBot");

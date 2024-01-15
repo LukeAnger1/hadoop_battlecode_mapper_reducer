@@ -64,12 +64,12 @@ public class BuilderBot extends BaseBot {
             if (haveEnemyFlag){
                 navigateTo(rc, getClosestSpawnLocation(rc));
             }
-
-
+            
+            
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
             // fight
-
+            
             rc.setIndicatorString("BuilderBot");
             buildTrapIfEnoughPlayers(rc, BUILDER_ENEMY_THRESHOLD_MOVE_STUN, BUILDER_ENEMY_THRESHOLD_MOVE_BOMB);
             if (getNumberofNearbyEnemies(rc) > getNumberOfNearbyTeammates(rc)) {
@@ -87,6 +87,7 @@ public class BuilderBot extends BaseBot {
             if (rng.nextInt() % 8 == 0) {
                 fillEverything(rc);
             }
+            Communication.markUnderAttackLocationAsFree(rc);
         }
     }
 

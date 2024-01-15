@@ -175,7 +175,6 @@ public class AttackerBot {
             // attack enemy if we can
             if (rc.canAttack(enemyRobots[i].getLocation())){
                 rc.attack(enemyRobots[i].getLocation());
-                System.out.println("Attacked an enemy!");
             }
         }
     }
@@ -186,7 +185,6 @@ public class AttackerBot {
             // heal ally if we can
             if (rc.canHeal(allyRobots[i].getLocation())){
                 rc.heal(allyRobots[i].getLocation());
-                System.out.println("Healed an ally!");
             }
         }
     }

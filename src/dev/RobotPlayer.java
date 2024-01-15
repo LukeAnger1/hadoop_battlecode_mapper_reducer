@@ -60,7 +60,9 @@ public strictfp class RobotPlayer {
     }
 
     public static BaseBot newRoleIfSpecialized(RobotController rc, int duckNumber, BaseBot bot){
+
         if (bot.getRole() == Role.CAMPER) return bot;
+
         if (rc.getLevel(SkillType.HEAL) >= 4){
             return new HealerBot(duckNumber);
         } else if (rc.getLevel(SkillType.ATTACK) >= 4) {
