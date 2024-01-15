@@ -74,17 +74,17 @@ def make_bot(input_folder_path, output_folder_path, original_words, replace_word
         if not os.path.exists(dest_folder):
             os.makedirs(dest_folder)
 
-        for file in files:
+        for file_name in files:
             # Read and modify the content of each file
-            input_file_path = os.path.join(root, file)
-            with open(input_file_path, 'r') as file:
-                file_content = file.read()
+            input_file_path = os.path.join(root, file_name)
+            with open(input_file_path, 'r') as file_obj:
+                file_content = file_obj.read()
             modified_content = replace_words_func(file_content, original_words, replace_words)
 
             # Write the modified content to the corresponding file in the output directory
-            output_file_path = os.path.join(dest_folder, file)
-            with open(output_file_path, 'w') as file:
-                file.write(modified_content)
+            output_file_path = os.path.join(dest_folder, file_name)
+            with open(output_file_path, 'w') as file_obj:
+                file_obj.write(modified_content)
 
         for dir in dirs:
             # Copy each subdirectory
