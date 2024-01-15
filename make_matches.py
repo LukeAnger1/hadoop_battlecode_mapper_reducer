@@ -1,6 +1,7 @@
 import sys
 import itertools
 import random
+import argparse
 from itertools import combinations
 
 bot_seperator = '\n'
@@ -8,6 +9,11 @@ bot_type_sperator = '|'
 bot_list_seperator = '.'
 bot_var_value_seperator = '->'
 worthless_info = ' '
+
+# Argument parser for command line options
+parser = argparse.ArgumentParser(description="Generate bot combinations")
+parser.add_argument("-n", type=int, default=100, help="Number of random combinations to generate (default: 100)")
+args = parser.parse_args()
 
 # This will get a list of every possible combination
 def get_all_combinations_one_bot(replace_range):
@@ -63,7 +69,7 @@ if __name__ == '__main__':
         # [(botName1, maps1, (var1, var2, var3, var4, var5,...), (value1, value2, value3, value4, value5,...)), (botName1, ...), ..., (botName2,...)]
 
         # This is all possible combinations, probaly going to have to use the random choosing one for big sets
-        for combo in get_rand_combinations_one_bot(values, 100):
+        for combo in get_rand_combinations_one_bot(values, args.n):
             bots.append((bot_name, bot_maps, vars, combo))
         
         # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
