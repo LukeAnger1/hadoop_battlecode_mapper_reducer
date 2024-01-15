@@ -178,8 +178,8 @@ if __name__ == '__main__':
         
         if not winner == "Winner not found":
 
-            key1 = (bot1_name, bot1_vars_old, bot1_combo_old)
-            key2 = (bot2_name, bot2_vars_old, bot2_combo_old)
+            key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
+            key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
 
             if winner == bot1_name:
                 win_key=key1
