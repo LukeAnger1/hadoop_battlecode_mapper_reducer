@@ -14,8 +14,12 @@ def get_all_combinations_one_bot(replace_range):
     return list(itertools.product(*replace_range))
 
 # This will pick random ones within the range
-def get_rand_combinations_one_bot(replace_range, number_combination):
-    return random.sample(get_all_combinations_one_bot(replace_range), number_combination)
+def get_rand_combinations_one_bot(replace_range, number_combinations):
+    random_combinations = []
+    for _ in range(number_combinations):
+        combination = tuple(random.choice(r) for r in replace_range)
+        random_combinations.append(combination)
+    return random_combinations
 
 if __name__ == '__main__':
     bots = [] # this will contain a list of the bots, not necassarily the same file name bot
@@ -59,7 +63,7 @@ if __name__ == '__main__':
         # [(botName1, maps1, (var1, var2, var3, var4, var5,...), (value1, value2, value3, value4, value5,...)), (botName1, ...), ..., (botName2,...)]
 
         # This is all possible combinations, probaly going to have to use the random choosing one for big sets
-        for combo in get_all_combinations_one_bot(values):
+        for combo in get_rand_combinations_one_bot(values, 100):
             bots.append((bot_name, bot_maps, vars, combo))
         
         # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
