@@ -1,0 +1,7 @@
+Here is some code for checking bytecode
+
+int startBytecode = Clock.getBytecodeNum();
+// Some operations
+int endBytecode = Clock.getBytecodeNum();
+
+System.out.println("Bytecodes used: " + (endBytecode - startBytecode));

@@ -47,10 +47,10 @@ def get_rand_combinations_one_bot(replace_range, number_combination):
     return random.sample(get_all_combinations_one_bot(replace_range), number_combination)
     
 # TODO: The current is just for testing and should be switched later
-folder_with_gradlew = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg"
-bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
+folder_with_gradlew = "/home/langer1/bc/yaro"
+bot_source_file_folder_with_dummy_variables = "/home/langer1/bc/mr/src" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
 # IMPORTANT make sure the below file is right it will delete all bots!!!!
-bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg/src" # This is where it puts the modified content, this is what the game will run
+bot_source_file_folder = "/home/langer1/bc/yaro/src" # This is where it puts the modified content, this is what the game will run
 
 # Function to replace words
 def replace_words_func(text, original, replace):\
