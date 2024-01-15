@@ -66,20 +66,31 @@ def make_bot(input_folder_path, output_folder_path, original_words, replace_word
     if not os.path.exists(output_folder_path):
         os.makedirs(output_folder_path)
 
-    # Iterate over all files in the input folder
-    for filename in os.listdir(input_folder_path):
-        input_file_path = os.path.join(input_folder_path, filename)
+    for root, dirs, files in os.walk(input_folder_path):
+        # Determine the path to the destination folder
+        dest_folder = os.path.join(output_folder_path, os.path.relpath(root, input_folder_path))
 
-        # Check if it's a file and not a directory
-        if os.path.isfile(input_file_path):
+        # Create the destination folder if it doesn't exist
+        if not os.path.exists(dest_folder):
+            os.makedirs(dest_folder)
+
+        for file in files:
+            # Read and modify the content of each file
+            input_file_path = os.path.join(root, file)
             with open(input_file_path, 'r') as file:
                 file_content = file.read()
-
             modified_content = replace_words_func(file_content, original_words, replace_words)
 
-            output_file_path = os.path.join(output_folder_path, filename)
+            # Write the modified content to the corresponding file in the output directory
+            output_file_path = os.path.join(dest_folder, file)
             with open(output_file_path, 'w') as file:
                 file.write(modified_content)
+
+        for dir in dirs:
+            # Copy each subdirectory
+            src_dir_path = os.path.join(root, dir)
+            dest_dir_path = os.path.join(dest_folder, dir)
+            shutil.copytree(src_dir_path, dest_dir_path)
 
 def unmake_ALL_bots(folder_path):
     # Check if the folder exists
