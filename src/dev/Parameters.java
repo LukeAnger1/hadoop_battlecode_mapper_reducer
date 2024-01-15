@@ -11,7 +11,7 @@ public class Parameters {
 	public static final int BUILDER_ENEMY_THRESHOLD_MOVE_STUN = <?var3?>;
 
 	// public static final int BUILDER_ENEMY_THRESHOLD_MOVE_BOMB = 4;
-	public static final int BUILDER_ENEMY_THRESHOLD_MOVE_STUN = <?var4?>;
+	public static final int BUILDER_ENEMY_THRESHOLD_MOVE_BOMB = <?var4?>;
 
 	// public static final int CAMPER_ENEMY_THRESHOLD_SETUP_STUN = 0;
 	public static final int CAMPER_ENEMY_THRESHOLD_SETUP_STUN = <?var5?>;
