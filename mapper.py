@@ -45,12 +45,12 @@ def get_all_combinations_one_bot(replace_range):
 # This will pick random ones within the range
 def get_rand_combinations_one_bot(replace_range, number_combination):
     return random.sample(get_all_combinations_one_bot(replace_range), number_combination)
-    
+
 # TODO: The current is just for testing and should be switched later
-folder_with_gradlew = "/home/langer1/bc/yaro"
-bot_source_file_folder_with_dummy_variables = "/home/langer1/bc/mr/src" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
+folder_with_gradlew = "/home/hduser/yaro"
+bot_source_file_folder_with_dummy_variables = "src" # this is the folder to look for the bots (any b>
 # IMPORTANT make sure the below file is right it will delete all bots!!!!
-bot_source_file_folder = "/home/langer1/bc/yaro/src" # This is where it puts the modified content, this is what the game will run
+bot_source_file_folder = "/home/hduser/yaro/src" # This is where it puts the modified content, this >
 
 # Function to replace words
 def replace_words_func(text, original, replace):\
@@ -117,7 +117,7 @@ def unmake_ALL_bots(folder_path):
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
         # Run the command
-        print(f'running command {command}')
+        # print(f'running command {command}')
         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, stdin=subprocess.DEVNULL, cwd=directory)
 
         # Return the standard output and error
