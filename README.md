@@ -32,6 +32,6 @@ hadoop fs -ls /path
 # This is a python streaming test that does not work yet, so far the example on https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html is the one that works
 # TODO: prob dont need file flag for mapper, make sure to use relative path absolute causes problems
 # This is path dependent so for different setups there needs to be different paths
-/home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file mapper.py    -mapper mapper.py -file reducer.py   -reducer reducer.py -input /user/joe/wordcount/input/file01 -output /out16
+/home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file mapper.py    -mapper mapper.py -file reducer.py   -reducer reducer.py -input /input1/matches -output /out1
 
 # please test your code on subset before uploading to cluster
