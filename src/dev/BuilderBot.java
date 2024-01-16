@@ -12,7 +12,7 @@ import static dev.Moves.Movement.getClosestSpawnLocation;
 import static dev.Moves.Movement.moveAwayFrom;
 import static dev.Moves.Utils.*;
 import static dev.RobotPlayer.rng;
-import static dev.Parameters.*;
+import dev.Parameters;
 
 public class BuilderBot extends BaseBot {
 
@@ -37,7 +37,7 @@ public class BuilderBot extends BaseBot {
             moveRandomly(rc);
         }
         if (rc.getRoundNum() > 195){
-            buildTrapIfEnoughPlayers(rc, BUILDER_ENEMY_THRESHOLD_SETUP_STUN, BUILDER_ENEMY_THRESHOLD_SETUP_BOMB);
+            buildTrapIfEnoughPlayers(rc, Parameters.BUILDER_ENEMY_THRESHOLD_SETUP_STUN, Parameters.BUILDER_ENEMY_THRESHOLD_SETUP_BOMB);
         }
     }
 
@@ -71,7 +71,7 @@ public class BuilderBot extends BaseBot {
             // fight
             
             rc.setIndicatorString("BuilderBot");
-            buildTrapIfEnoughPlayers(rc, BUILDER_ENEMY_THRESHOLD_MOVE_STUN, BUILDER_ENEMY_THRESHOLD_MOVE_BOMB);
+            buildTrapIfEnoughPlayers(rc, Parameters.BUILDER_ENEMY_THRESHOLD_MOVE_STUN, Parameters.BUILDER_ENEMY_THRESHOLD_MOVE_BOMB);
             if (getNumberofNearbyEnemies(rc) > getNumberOfNearbyTeammates(rc)) {
                 moveBehindOurAverageTrapPosition(rc);
             }
