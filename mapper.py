@@ -117,7 +117,7 @@ def unmake_ALL_bots(folder_path):
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
         # Run the command
-        print(f'running command {command}')
+        # print(f'running command {command}')
         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, stdin=subprocess.DEVNULL, cwd=directory)
 
         # Return the standard output and error
