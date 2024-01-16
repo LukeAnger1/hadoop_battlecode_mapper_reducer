@@ -132,7 +132,7 @@ def run_games(bot1_name, bot2_name, maps):
     results = ""
     for map in maps:
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
-        results+=repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        results+=repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name} --stacktrace'))
     return results
 
 def extract_winner(text):
