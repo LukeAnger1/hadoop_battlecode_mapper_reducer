@@ -36,4 +36,8 @@ public class Parameters {
 
 	// public static final int HEALER_ROLE_RATE = 24;
 	public static final int HEALER_ROLE_RATE = <?var12?>;
+
+	public static final int UNDER_ATTACK_ENEMY_THRESHOLD = 1;
+	public static final int GIVE_UP_UNDER_ATTACK_THRESHOLD = 8;
+	public static final int MAX_DIST = 7200;
 }
