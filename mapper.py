@@ -187,7 +187,7 @@ if __name__ == '__main__':
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
         winner = extract_winner(results)
-        
+        print(f'the results are {results}')
         if not winner == "Winner not found":
 
             key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
