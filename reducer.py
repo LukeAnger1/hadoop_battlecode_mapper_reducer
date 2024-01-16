@@ -14,6 +14,7 @@ for line in sys.stdin:
     line = line.strip()
 
     # parse the input we got from mapper.py
+    print(f'the line is {line} of type {type(line)}')
     word, count = line.split('\t', 1)
 
     # convert count (currently a string) to int
