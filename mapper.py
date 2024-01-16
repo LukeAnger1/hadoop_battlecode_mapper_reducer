@@ -204,4 +204,5 @@ if __name__ == '__main__':
             print('{}\t{}'.format(str(win_key), 1))
             print('{}\t{}'.format(str(los_key), -1))
 
-    
+        else:
+                print(results)

@@ -10,7 +10,9 @@ word = None
 
 # input comes from STDIN
 for line in sys.stdin:
-    # remove leading and trailing whitespace
+    # Just [reint results to see who won
+    print(line)
+    """# remove leading and trailing whitespace
     line = line.strip()
 
     # parse the input we got from mapper.py
@@ -39,3 +41,4 @@ for line in sys.stdin:
 # do not forget to output the last word if needed!
 if current_word == word:
     print(f'{current_word}\t{current_count}')
+"""
