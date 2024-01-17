@@ -187,7 +187,7 @@ if __name__ == '__main__':
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
         
         # TODO: cut these results somewhere, either here or in the reduce
-        results = run_games(bot1_name, bot2_name, maps, extract_winner_and_print=True)
+        results = run_games(bot1_name, bot2_name, maps)
         
         for winner in results:
             if not winner == "Winner not found":
