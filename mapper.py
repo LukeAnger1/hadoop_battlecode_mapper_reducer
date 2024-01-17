@@ -134,7 +134,7 @@ def run_games(bot1_name, bot2_name, maps):
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
         result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
         # This will extract the winner
-        results.append(extract_winner(result))
+        results.append(result)
     return results
 
 def extract_winner(text):
@@ -189,8 +189,10 @@ if __name__ == '__main__':
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
         
-        for winner in results:
-            if not winner == "Winner not found":
+        for result in results:
+            print(result)
+            # TODO: implement below to extract the winner
+            """if not winner == "Winner not found":
 
                 key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
                 key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
@@ -204,6 +206,6 @@ if __name__ == '__main__':
             
                 # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
                 print('{}\t{}'.format(str(win_key), 1))
-                print('{}\t{}'.format(str(los_key), -1))
+                print('{}\t{}'.format(str(los_key), -1))"""
 
     
