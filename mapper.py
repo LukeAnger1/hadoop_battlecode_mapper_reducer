@@ -129,10 +129,12 @@ def run_command_in_terminal(command, directory=folder_with_gradlew):
 # TODO: this is the last bit of code it is going to need to return 
 def run_games(bot1_name, bot2_name, maps):
     # This is what input should look like, not a string ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-    results = ""
+    results = []
     for map in maps:
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
-        results+=repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        # This will extract the winner
+        results.append(extract_winner(result))
     return results
 
 def extract_winner(text):
@@ -185,23 +187,23 @@ if __name__ == '__main__':
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
         
         # TODO: cut these results somewhere, either here or in the reduce
-        results = run_games(bot1_name, bot2_name, maps)
-        winner = extract_winner(results)
+        results = run_games(bot1_name, bot2_name, maps, extract_winner_and_print=True)
         
-        if not winner == "Winner not found":
+        for winner in results:
+            if not winner == "Winner not found":
 
-            key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
-            key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
+                key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
+                key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
 
-            if winner == bot1_name:
-                win_key=key1
-                los_key=key2
-            else:
-                win_key=key2
-                los_key=key1
+                if winner == bot1_name:
+                    win_key=key1
+                    los_key=key2
+                else:
+                    win_key=key2
+                    los_key=key1
             
-            # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
-            print('{}\t{}'.format(str(win_key), 1))
-            print('{}\t{}'.format(str(los_key), -1))
+                # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
+                print('{}\t{}'.format(str(win_key), 1))
+                print('{}\t{}'.format(str(los_key), -1))
 
     
