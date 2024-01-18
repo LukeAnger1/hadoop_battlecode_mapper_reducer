@@ -189,10 +189,11 @@ if __name__ == '__main__':
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
 
-        for result in results:
-            # TODO: implement below to extract the winner
-            """if not winner == "Winner not found":
->>>>>>> hadoop_print_everything
+        for winner in results:
+            
+            if winner == "Winner not found":
+                print('{}\t{}'.format("issue", 1))
+            else:
 
                 key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
                 key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
@@ -206,4 +207,4 @@ if __name__ == '__main__':
             
                 # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
                 print('{}\t{}'.format(str(win_key), 1))
-                print('{}\t{}'.format(str(los_key), -1))"""
+                print('{}\t{}'.format(str(los_key), -1))
