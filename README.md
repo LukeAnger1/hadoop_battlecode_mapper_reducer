@@ -7,6 +7,7 @@ This is regression for a hadoop cluster running battlecode
 4. Every bot in your src will be deleted working on a fix but save ur bots before running
 5. Do not make bots with numbers in their name
 6. DO NOT be Luke. DO NOT be an idiot and make these mistakes!!!
+7. For the input.txt (9) isnt registered as a tuple, but as an int!!!!
 
 Here is how to use the software. Make a file like test_input.txt which has different bots, with maps, and strings you want switched with an -> pointing to a tuple, list, or range of values to test
 
