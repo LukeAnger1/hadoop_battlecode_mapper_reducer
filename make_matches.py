@@ -70,6 +70,7 @@ if __name__ == '__main__':
 
         # This is all possible combinations, probaly going to have to use the random choosing one for big sets
         for combo in get_rand_combinations_one_bot(values, args.n):
+            # for combo in get_all_combinations_one_bot(values):
             bots.append((bot_name, bot_maps, vars, combo))
         
         # now we have a list of all the bots, now we need to make the matches, this will look like ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
