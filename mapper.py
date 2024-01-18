@@ -156,7 +156,6 @@ def extract_winner(text):
 if __name__ == '__main__':
     # each line is match info ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
     for line in sys.stdin:
-        # TODO: This is not combining the results the right way
         bot1_info_old, bot2_info_old, maps = eval(line)
 
         bot1_name_old, bot1_vars_old, bot1_combo_old = bot1_info_old

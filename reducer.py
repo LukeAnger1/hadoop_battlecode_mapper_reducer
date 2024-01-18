@@ -10,6 +10,8 @@ word = None
 
 # input comes from STDIN
 for line in sys.stdin:
+    # TODO: This is not combining the results the right way for non hadoop running
+
     # remove leading and trailing whitespace
     line = line.strip()
 
