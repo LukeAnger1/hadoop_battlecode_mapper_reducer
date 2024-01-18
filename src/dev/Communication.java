@@ -1,7 +1,7 @@
 package dev;
 
 import battlecode.common.*;
-import static dev.Parameters.*;
+import dev.Parameters;
 
 public strictfp class Communication {
     // Index: what is stored
@@ -26,7 +26,7 @@ public strictfp class Communication {
         CAMPER, BUILDER, ATTACKER, HEALER, BASE
     }
 
-    static int[] roleSplit = {CAMPER_ROLE_RATE, BUILDER_ROLE_RATE, ATTACKER_ROLE_RATE, HEALER_ROLE_RATE};
+    static int[] roleSplit = {Parameters.CAMPER_ROLE_RATE, Parameters.BUILDER_ROLE_RATE, Parameters.ATTACKER_ROLE_RATE, Parameters.HEALER_ROLE_RATE};
 
     /* 
     HELPER FUNCTIONS
@@ -173,7 +173,7 @@ public strictfp class Communication {
         MapLocation underAttackLoc = getUnderAttackLocation(rc);
         if (rc.getLocation().isWithinDistanceSquared(underAttackLoc, 4)) {
             RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
-            if (enemies.length <= UNDER_ATTACK_ENEMY_THRESHOLD || enemies.length > GIVE_UP_UNDER_ATTACK_THRESHOLD) setNotUnderAttack(rc);
+            if (enemies.length <= Parameters.UNDER_ATTACK_ENEMY_THRESHOLD || enemies.length > Parameters.GIVE_UP_UNDER_ATTACK_THRESHOLD) setNotUnderAttack(rc);
         }
     }
 

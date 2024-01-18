@@ -10,8 +10,14 @@ word = None
 
 # input comes from STDIN
 for line in sys.stdin:
+<<<<<<< HEAD
     # Just [reint results to see who won
     print(line)
+=======
+    # just print the results for now
+    print(line)
+
+>>>>>>> hadoop_print_everything
     """# remove leading and trailing whitespace
     line = line.strip()
 

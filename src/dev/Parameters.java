@@ -1,7 +1,7 @@
 package dev;
 
 public class Parameters {
-	// public static final int BUILDER_ENEMY_THRESHOLD_SETUP_STUN = 0;
+    // public static final int BUILDER_ENEMY_THRESHOLD_SETUP_STUN = 0;
 	public static final int BUILDER_ENEMY_THRESHOLD_SETUP_STUN = <?var1?>;    
 
 	// public static final int BUILDER_ENEMY_THRESHOLD_SETUP_BOMB = 1;
