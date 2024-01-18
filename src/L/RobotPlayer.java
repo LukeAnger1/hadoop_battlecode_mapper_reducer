@@ -83,10 +83,12 @@ public strictfp class RobotPlayer {
                     }
                 } else {
                     // Added in Andrew code to buy upgrade
-                    if (rc.canBuyGlobal(GlobalUpgrade.ACTION)) {
-                        rc.buyGlobal(GlobalUpgrade.ACTION);
+                    if (rc.canBuyGlobal(GlobalUpgrade.ATTACK)) {
+                        rc.buyGlobal(GlobalUpgrade.ATTACK);
                     } else if (rc.canBuyGlobal(GlobalUpgrade.HEALING)) {
                         rc.buyGlobal(GlobalUpgrade.HEALING);
+                    } else if (rc.canBuyGlobal(GlobalUpgrade.CAPTURING)){
+                        rc.buyGlobal(GlobalUpgrade.CAPTURING);
                     }
                     // TODO: change this to use a state based machine for switching what robots should do
                     AttackerBot.runAttacker(rc);

@@ -4,13 +4,16 @@ import battlecode.common.GameActionException;
 import battlecode.common.RobotController;
 import dev.Communication.Role;
 
+import static dev.RobotPlayer.BFSSink;
+import static dev.Pathing.parents;
 import static dev.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Build.fillEverything;
+import static dev.Moves.Build.fillLattice;
 import static dev.Moves.Build.goToNearbyCrumbsAndFillWater;
 import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
 import static dev.Moves.Movement.*;
 import static dev.Moves.Utils.getNumberOfNearbyTeammates;
 import static dev.Moves.Utils.getNumberofNearbyEnemies;
+import static dev.Parameters.RETREAT_HEALTH_THRESHOLD;
 import static dev.RobotPlayer.rng;
 
 public class AttackerBot extends BaseBot {
@@ -26,17 +29,9 @@ public class AttackerBot extends BaseBot {
 
     @Override
     public void setupTurn(RobotController rc) throws GameActionException {
-        if (!rc.isSpawned()) {
-            spawn(rc, duckNumber);
-        }
-
-        if (rc.isSpawned()) {
-            fillEverything(rc);
-            updateSymmetry(rc);
-            if (rc.getRoundNum() > 180) {
-                goToAndPickUpEnemyFlag(rc);
-            }
-            moveRandomly(rc);
+		super.setupTurn(rc);
+        if (rc.isSpawned() && rc.getRoundNum() > 180) {
+            goToAndPickUpEnemyFlag(rc);
         }
     }
 
@@ -52,13 +47,15 @@ public class AttackerBot extends BaseBot {
             // pick up any we are in range for and head back
             pickUpFlags(rc);
             boolean haveEnemyFlag = rc.hasFlag();
-            if (haveEnemyFlag){
-                navigateTo(rc, getClosestSpawnLocation(rc));
+            if (haveEnemyFlag) {
+				returnFlag(rc);
             }
-
             
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
+//            if (rc.getHealth() < RETREAT_HEALTH_THRESHOLD){
+//                retreat(rc);
+//            }
             // fight
             if (getNumberofNearbyEnemies(rc) > getNumberOfNearbyTeammates(rc)) {
                 moveBehindOurAverageTrapPosition(rc);
@@ -73,11 +70,11 @@ public class AttackerBot extends BaseBot {
             // go to flag
             navigateToPossibleEnemyFlagLocations(rc);
             if (rng.nextInt() % 8 == 0) {
-                fillEverything(rc);
+                fillLattice(rc);
             }
 
 
-            moveRandomly(rc);
+            moveRandomParticle(rc);
             Communication.markUnderAttackLocationAsFree(rc);
         }
 

@@ -1,18 +1,15 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.*;
 
 import java.util.Random;
 
-import static dev.Communication.roleSelection;
-import static dev.Communication.Role;
-import static dev.Moves.Movement.getClosestSpawnLocation;
-import static dev.Pathing.bfs;
+import static Sprint1.Communication.roleSelection;
+import static Sprint1.Communication.Role;
 
 public strictfp class RobotPlayer {
 
     public static Random rng = null;
-    public static BaseBot bot;
 
     public static final Direction[] directions = {
             Direction.NORTH,
@@ -25,51 +22,16 @@ public strictfp class RobotPlayer {
             Direction.NORTHWEST,
     };
 
-    public static MapLocation BFSSink;
-    static final byte M_HIDDEN = 0b0000;
-	static final byte M_EMPTY = 0b0001;
-	static final byte M_WALL = 0b0010;
-    public static byte[][] map = new byte[60][60];
-    public static int height = 0;
-    public static int width = 0;
-    public static int explored_counter = 0;
-
-    public static void printMap() {
-		String out = "\n";
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				out = out + map[i][j];
-			}
-			out = out + "\n";
-		}
-		System.out.println(out);
-	}
 
     @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
         rng = new Random(rc.getID());
-        bot = new BaseBot();
+        BaseBot bot = new BaseBot();
 
         while (true) {
             try {
-                if (rc.isSpawned()) {
-                    MapInfo[] tiles = rc.senseNearbyMapInfos();
-                    for (int i = 0; i < tiles.length; i++) {
-                        MapInfo tile = tiles[i];
-                        MapLocation loc = tile.getMapLocation();
-                        if (map[loc.x][loc.y] == M_HIDDEN)
-                            explored_counter++;
-                        if (tile.isWall()) {
-                            map[loc.x][loc.y] = M_WALL;
-                        } else {
-                            map[loc.x][loc.y] = M_EMPTY;
-                        }
-                    }
-                }
                 // round 1 code role selection + first actions
                 if (rc.getRoundNum() == 1) {
-                    height = rc.getMapHeight(); // Y dim
-                    width = rc.getMapWidth(); // X dim
                     bot = roleSelection(rc);
                     bot.firstTurn(rc);
                 } else if (rc.getRoundNum() < GameConstants.SETUP_ROUNDS) {
@@ -94,10 +56,6 @@ public strictfp class RobotPlayer {
                 e.printStackTrace();
 
             } finally {
-                while (((float)explored_counter)/(width*height) > 0.25 && BFSSink != null && Clock.getBytecodeNum() < GameConstants.BYTECODE_LIMIT * 0.8) {
-                    rc.setIndicatorDot(BFSSink, 255, 0, 0);
-                    bfs(rc, BFSSink);
-                }
                 Clock.yield();
             }
         }

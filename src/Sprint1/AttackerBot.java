@@ -1,26 +1,21 @@
-package dev;
+package Sprint1;
 
-import battlecode.common.*;
-import dev.Communication.*;
+import battlecode.common.GameActionException;
+import battlecode.common.RobotController;
+import Sprint1.Communication.Role;
 
-import static dev.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Build.fillLattice;
-import static dev.Moves.Build.goToNearbyCrumbsAndFillWater;
-import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Movement.*;
-import static dev.Moves.Defend.*;
-import static dev.Moves.Utils.getNumberOfNearbyTeammates;
-import static dev.Moves.Utils.getNumberofNearbyEnemies;
-import static dev.Parameters.RETREAT_HEALTH_THRESHOLD;
-import static dev.RobotPlayer.rng;
-import static dev.Moves.Utils.getNumberOfNearbyTeammates;
-import static dev.Moves.Utils.getNumberofNearbyEnemies;
-import static dev.Pathing.parents;
-import static dev.RobotPlayer.BFSSink;
+import static Sprint1.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Build.fillEverything;
+import static Sprint1.Moves.Build.goToNearbyCrumbsAndFillWater;
+import static Sprint1.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Movement.*;
+import static Sprint1.Moves.Utils.getNumberOfNearbyTeammates;
+import static Sprint1.Moves.Utils.getNumberofNearbyEnemies;
+import static Sprint1.RobotPlayer.rng;
 
-public class HealerBot extends BaseBot {
+public class AttackerBot extends BaseBot {
 
-    public HealerBot(int duckNumber) {
+    public AttackerBot(int duckNumber) {
         super(duckNumber);
     }
 
@@ -31,7 +26,18 @@ public class HealerBot extends BaseBot {
 
     @Override
     public void setupTurn(RobotController rc) throws GameActionException {
-        super.setupTurn(rc);
+        if (!rc.isSpawned()) {
+            spawn(rc, duckNumber);
+        }
+
+        if (rc.isSpawned()) {
+            fillEverything(rc);
+            updateSymmetry(rc);
+            if (rc.getRoundNum() > 180) {
+                goToAndPickUpEnemyFlag(rc);
+            }
+            moveRandomly(rc);
+        }
     }
 
     @Override
@@ -42,27 +48,23 @@ public class HealerBot extends BaseBot {
 
         if (rc.isSpawned()){
             updateSymmetry(rc);
-            // alert of (approx) spawn loc under attack if enough enemies are nearby
 
             // pick up any we are in range for and head back
             pickUpFlags(rc);
             boolean haveEnemyFlag = rc.hasFlag();
-            if (haveEnemyFlag) {
-				returnFlag(rc);
+            if (haveEnemyFlag){
+                navigateTo(rc, getClosestSpawnLocation(rc));
             }
 
             
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
             // fight
-//            if (rc.getHealth() < RETREAT_HEALTH_THRESHOLD){
-//                retreat(rc);
-//            }
             if (getNumberofNearbyEnemies(rc) > getNumberOfNearbyTeammates(rc)) {
                 moveBehindOurAverageTrapPosition(rc);
             }
-            healWithPriorityTo_Flag_InRange_Lowest(rc);
             attackWithPriorityTo_Flag_InRange_Lowest(rc);
+            healWithPriorityTo_Flag_InRange_Lowest(rc);
 
             // go to any flags we see
             goToClosestNearbyFlagAndPickup(rc);
@@ -71,17 +73,19 @@ public class HealerBot extends BaseBot {
             // go to flag
             navigateToPossibleEnemyFlagLocations(rc);
             if (rng.nextInt() % 8 == 0) {
-                fillLattice(rc);
+                fillEverything(rc);
             }
 
 
-            moveRandomParticle(rc);
+            moveRandomly(rc);
             Communication.markUnderAttackLocationAsFree(rc);
         }
+
+        rc.setIndicatorString("AttackerBot");
     }
 
     @Override
     public Role getRole() {
-        return Role.HEALER;
+        return Role.ATTACKER;
     }
 }

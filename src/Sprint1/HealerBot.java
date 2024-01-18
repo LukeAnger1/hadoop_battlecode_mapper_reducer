@@ -1,22 +1,18 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.*;
-import dev.Communication.*;
+import Sprint1.Communication.*;
 
-import static dev.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Build.fillLattice;
-import static dev.Moves.Build.goToNearbyCrumbsAndFillWater;
-import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Movement.*;
-import static dev.Moves.Defend.*;
-import static dev.Moves.Utils.getNumberOfNearbyTeammates;
-import static dev.Moves.Utils.getNumberofNearbyEnemies;
-import static dev.Parameters.RETREAT_HEALTH_THRESHOLD;
-import static dev.RobotPlayer.rng;
-import static dev.Moves.Utils.getNumberOfNearbyTeammates;
-import static dev.Moves.Utils.getNumberofNearbyEnemies;
-import static dev.Pathing.parents;
-import static dev.RobotPlayer.BFSSink;
+import static Sprint1.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Build.fillEverything;
+import static Sprint1.Moves.Build.goToNearbyCrumbsAndFillWater;
+import static Sprint1.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Movement.*;
+
+import static Sprint1.Moves.Utils.getNumberOfNearbyTeammates;
+import static Sprint1.Moves.Utils.getNumberofNearbyEnemies;
+
+import static Sprint1.RobotPlayer.rng;
 
 public class HealerBot extends BaseBot {
 
@@ -47,17 +43,14 @@ public class HealerBot extends BaseBot {
             // pick up any we are in range for and head back
             pickUpFlags(rc);
             boolean haveEnemyFlag = rc.hasFlag();
-            if (haveEnemyFlag) {
-				returnFlag(rc);
+            if (haveEnemyFlag){
+                navigateTo(rc, getClosestSpawnLocation(rc));
             }
 
             
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
             // fight
-//            if (rc.getHealth() < RETREAT_HEALTH_THRESHOLD){
-//                retreat(rc);
-//            }
             if (getNumberofNearbyEnemies(rc) > getNumberOfNearbyTeammates(rc)) {
                 moveBehindOurAverageTrapPosition(rc);
             }
@@ -71,11 +64,11 @@ public class HealerBot extends BaseBot {
             // go to flag
             navigateToPossibleEnemyFlagLocations(rc);
             if (rng.nextInt() % 8 == 0) {
-                fillLattice(rc);
+                fillEverything(rc);
             }
 
 
-            moveRandomParticle(rc);
+            moveRandomly(rc);
             Communication.markUnderAttackLocationAsFree(rc);
         }
     }

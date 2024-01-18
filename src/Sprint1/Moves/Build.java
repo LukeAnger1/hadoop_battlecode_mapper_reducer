@@ -1,9 +1,9 @@
-package dev.Moves;
+package Sprint1.Moves;
 
 import battlecode.common.*;
-import dev.Parameters;
+import Sprint1.Parameters;
 
-import static dev.Moves.Utils.getAverageEnemyLocation;
+import static Sprint1.Moves.Utils.getAverageEnemyLocation;
 
 public class Build {
 
@@ -15,16 +15,7 @@ public class Build {
                 rc.fill(fillLoc);
             }
         }
-    }
 
-    public static void fillLattice(RobotController rc) throws GameActionException {
-        MapLocation loc = rc.getLocation();
-        for (Direction dir : Direction.allDirections()) {
-            MapLocation fillLoc = loc.add(dir);
-            if ((((fillLoc.x + fillLoc.y) % 2) == 0) &&  rc.canFill(fillLoc)) {
-                rc.fill(fillLoc);
-            }
-        }
     }
 
     public static void goToNearbyCrumbsAndFillWater(RobotController rc) throws GameActionException {
@@ -103,7 +94,7 @@ public class Build {
         MapInfo[] nearbyMapInfo = rc.senseNearbyMapInfos(2);
         for (MapInfo mapinfo : nearbyMapInfo){
             MapLocation mapLocation = mapinfo.getMapLocation();
-            if ((((mapLocation.x + mapLocation.y) % 2) == 1) && rc.canDig(mapLocation)){
+            if (rc.canDig(mapLocation)){
                 rc.dig(mapLocation);
                 break;
             }

@@ -1,7 +1,7 @@
 package dev;
 
 public class Parameters {
-    // public static final int BUILDER_ENEMY_THRESHOLD_SETUP_STUN = 0;
+    	// public static final int BUILDER_ENEMY_THRESHOLD_SETUP_STUN = 0;
 	public static final int BUILDER_ENEMY_THRESHOLD_SETUP_STUN = <?var1?>;    
 
 	// public static final int BUILDER_ENEMY_THRESHOLD_SETUP_BOMB = 1;
@@ -44,4 +44,6 @@ public class Parameters {
 	public static final int GIVE_UP_UNDER_ATTACK_THRESHOLD = <?var14?>;
 
 	public static final int MAX_DIST = 7200;
+
+	public static final int RETREAT_HEALTH_THRESHOLD = 999;
 }

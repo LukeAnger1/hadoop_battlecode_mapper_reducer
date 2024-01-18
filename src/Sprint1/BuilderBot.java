@@ -1,20 +1,18 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.*;
-import dev.Communication.Role;
+import Sprint1.Communication.Role;
 
-import static dev.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Build.*;
-import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Movement.*;
-import static dev.Moves.Movement.moveRandomParticle;
-import static dev.Moves.Movement.getClosestSpawnLocation;
-import static dev.Moves.Movement.moveAwayFrom;
-import static dev.Moves.Utils.*;
-import static dev.RobotPlayer.rng;
-import static dev.Parameters.*;
-import static dev.Pathing.parents;
-import static dev.RobotPlayer.BFSSink;
+import static Sprint1.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Build.*;
+import static Sprint1.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Movement.*;
+import static Sprint1.Moves.Movement.moveRandomly;
+import static Sprint1.Moves.Movement.getClosestSpawnLocation;
+import static Sprint1.Moves.Movement.moveAwayFrom;
+import static Sprint1.Moves.Utils.*;
+import static Sprint1.RobotPlayer.rng;
+import static Sprint1.Parameters.*;
 
 public class BuilderBot extends BaseBot {
 
@@ -32,11 +30,11 @@ public class BuilderBot extends BaseBot {
         // farm to level X
         // start placing traps close to round 200
         farmBuildingLevel(rc, 3);
-        fillLattice(rc);
+        fillEverything(rc);
         if (rc.getRoundNum() > 180) {
             goToAndPickUpEnemyFlag(rc);
         } else {
-            moveRandomParticle(rc);
+            moveRandomly(rc);
         }
         if (rc.getRoundNum() > 195){
             buildTrapIfEnoughPlayers(rc, BUILDER_ENEMY_THRESHOLD_SETUP_STUN, BUILDER_ENEMY_THRESHOLD_SETUP_BOMB);
@@ -63,17 +61,15 @@ public class BuilderBot extends BaseBot {
             // pick up any we are in range for and head back
             pickUpFlags(rc);
             boolean haveEnemyFlag = rc.hasFlag();
-            if (haveEnemyFlag) {
-				returnFlag(rc);
+            if (haveEnemyFlag){
+                navigateTo(rc, getClosestSpawnLocation(rc));
             }
             
             
             // dont mess up our own flag holders
             dontBlockFlagHolders(rc);
             // fight
-//            if (rc.getHealth() < RETREAT_HEALTH_THRESHOLD){
-//                retreat(rc);
-//            }
+            
             rc.setIndicatorString("BuilderBot");
             buildTrapIfEnoughPlayers(rc, BUILDER_ENEMY_THRESHOLD_MOVE_STUN, BUILDER_ENEMY_THRESHOLD_MOVE_BOMB);
             if (getNumberofNearbyEnemies(rc) > getNumberOfNearbyTeammates(rc)) {
@@ -89,7 +85,7 @@ public class BuilderBot extends BaseBot {
             // go to flag
             navigateToPossibleEnemyFlagLocations(rc);
             if (rng.nextInt() % 8 == 0) {
-                fillLattice(rc);
+                fillEverything(rc);
             }
             Communication.markUnderAttackLocationAsFree(rc);
         }

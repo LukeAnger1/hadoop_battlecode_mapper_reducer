@@ -1,27 +1,23 @@
-package dev.Moves;
+package Sprint1.Moves;
 
 import battlecode.common.*;
 
-import static dev.BaseBot.navigateTo;
-import static dev.Moves.Utils.*;
-import static dev.RobotPlayer.directions;
-import static dev.RobotPlayer.BFSSink;
-import static dev.Pathing.parents;
-import dev.RobotPlayer;
+import static Sprint1.BaseBot.navigateTo;
+import static Sprint1.Moves.Utils.getAverageEnemyLocation;
+import static Sprint1.Moves.Utils.getAverageTrapLocation;
+import static Sprint1.RobotPlayer.directions;
+import Sprint1.RobotPlayer;
 
 public class Movement {
-	static Direction currentDirection = directions[RobotPlayer.rng.nextInt(directions.length)];
     public static MapLocation getClosestSpawnLocation(RobotController rc) throws GameActionException {
         MapLocation[] spawnLocs = rc.getAllySpawnLocations();
         MapLocation closestLoc = spawnLocs[0];
         int closestDist = 7200;
         for (MapLocation loc : spawnLocs) {
-            if (rc.isSpawned()) {
-                int dist = rc.getLocation().distanceSquaredTo(loc);
-                if (dist < closestDist) {
-                    closestDist = dist;
-                    closestLoc = loc;
-                }
+            int dist = rc.getLocation().distanceSquaredTo(loc);
+            if (dist < closestDist) {
+                closestDist = dist;
+                closestLoc = loc;
             }
         }
         rc.setIndicatorString("Closest spawn location is " + closestLoc.toString());
@@ -34,27 +30,6 @@ public class Movement {
             rc.move(dir);
         }
     }
-
-	public static void moveRandomParticle(RobotController rc) throws GameActionException {
-		if (rc.canMove(currentDirection)) {
-			rc.move(currentDirection);
-		} else {
-			currentDirection = directions[RobotPlayer.rng.nextInt(directions.length)];
-			if (rc.canMove(currentDirection)) {
-				rc.move(currentDirection);
-			} else {
-				currentDirection = directions[RobotPlayer.rng.nextInt(directions.length)];
-				if (rc.canMove(currentDirection)) {
-					rc.move(currentDirection);
-				} else {
-					currentDirection = directions[RobotPlayer.rng.nextInt(directions.length)];
-					if (rc.canMove(currentDirection)) {
-						rc.move(currentDirection);
-					}
-				}
-			}
-		}
-	}
 
     public static void moveAwayFrom(RobotController rc, MapLocation enemyLoc) throws GameActionException {
         MapLocation loc = rc.getLocation();
@@ -88,9 +63,13 @@ public class Movement {
             MapLocation flagHolderLoc = flag.getLocation();
             Direction flagHolderDir = flagHolderLoc.directionTo(getClosestSpawnLocation(rc));
 
-            if (loc.distanceSquaredTo(flagHolderLoc) <= 9) {
+            if (loc.distanceSquaredTo(flagHolderLoc) <= 4) {
                 // might be blocking give it space
-				moveAwayFrom(rc, flagHolderLoc);
+                Direction away = loc.directionTo(flagHolderLoc).opposite();
+                if (rc.canMove(away)) {
+                    rc.move(away);
+                }
+
             } else if (loc.distanceSquaredTo(getClosestSpawnLocation(rc)) < 8) {
                 // if we are close to spawn give it some space to move in
                 dir = dir.rotateLeft().rotateLeft();
@@ -120,32 +99,5 @@ public class Movement {
         rc.setIndicatorDot(avgEnemyLoc, 0,255,0);
         rc.setIndicatorDot(avgEnemyLoc, 0,0,255);
     }
-
-    public static void retreat(RobotController rc) throws GameActionException {
-
-        MapLocation loc = rc.getLocation();
-//        MapLocation avgEnemyLoc = getAverageEnemyLocation(rc, rc.senseNearbyRobots(-1, rc.getTeam().opponent()));
-//        MapLocation avgTeammateLoc = getAverageTeammateLocation(rc, rc.senseNearbyRobots(-1, rc.getTeam()));
-        RobotInfo closestEnemy = getClosestEnemy(rc);
-        //Direction enemyDirToTeam = avgEnemyLoc.directionTo(avgEnemyLoc);
-
-
-        if (closestEnemy != null){
-            moveAwayFrom(rc, closestEnemy.getLocation());
-        }
-//        if (avgEnemyLoc != null){
-//            moveAwayFrom(rc, avgEnemyLoc);
-//        } else if (avgTeammateLoc != null) {
-//            rc.setIndicatorDot(avgTeammateLoc, 50,50,20);
-//            navigateTo(rc, avgTeammateLoc);
-//        }
-
-    }
-
-	public static void returnFlag(RobotController rc) throws GameActionException {
-        if (BFSSink != null && parents.containsKey(rc.getLocation()))
-            navigateTo(rc, BFSSink);
-		else navigateTo(rc, getClosestSpawnLocation(rc));
-	}
 
 }

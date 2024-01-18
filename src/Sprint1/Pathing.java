@@ -1,17 +1,12 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.*;
-import dev.Communication.Role;
-import static dev.RobotPlayer.*;
-import static dev.Moves.Movement.getClosestSpawnLocation;
-import java.util.Queue;
-import java.util.HashMap;
-import java.util.LinkedList;
+import static Sprint1.RobotPlayer.*;
 
 public class Pathing {
 
     // pathfinding state
-	static Direction currentDirection = directions[RobotPlayer.rng.nextInt(directions.length)];
+	static Direction currentDirection = Direction.NORTH;
 	static boolean onObstacle = false;
 	static int maxDistSquared = 7200;
 	static int checkPointSquared = maxDistSquared;
@@ -25,28 +20,10 @@ public class Pathing {
     static MapLocation lastLoc = null;
     static int stuckCounter = 0;
     static MapLocation undefined_loc = new MapLocation(-1, -1);
-    static Queue<MapLocation> bfsQ =  new LinkedList<>();
-    static Queue<MapLocation> hidden = new LinkedList<>();
-    public static HashMap<MapLocation, MapLocation> parents = new HashMap<>();
-    static int currentPathIdx = -1;
-    // static MapLocation pSrc;
-    static MapLocation pSink;
 
     // Navigation
     static void navigateTo(RobotController rc, MapLocation loc) throws GameActionException {
-        rc.setIndicatorLine(rc.getLocation(), loc, 255, 0, 0);
-        if (BFSSink != null && loc.isWithinDistanceSquared(BFSSink, 4) && rc.isMovementReady() && bot.getRole() != Role.CAMPER) {
-            MapLocation me = rc.getLocation();
-            if (parents.containsKey(me)) {
-                MapLocation goal = parents.get(me);
-        		rc.setIndicatorLine(rc.getLocation(), goal, 0, 255, 0);
-                tryMove(rc, me.directionTo(goal));
-                while (goal != null && goal != BFSSink) {
-                    rc.setIndicatorDot(goal, 255, 0, 0);
-                    goal = parents.get(goal);
-                }
-            }
-        } else if (rc.isMovementReady()) {
+        if (rc.isMovementReady()) {
             bug2(rc, loc);
         }
     }
@@ -66,12 +43,12 @@ public class Pathing {
             return true;
         } else {
             Direction right = dir.rotateRight();
-            if (isPassable(rc, right) && rc.canMove(right)) {
+            if (isPassable(rc, dir) && rc.canMove(right)) {
                 rc.move(right);
                 return true;
             }
             Direction left = dir.rotateLeft();
-            if (isPassable(rc, left) && rc.canMove(left)) {
+            if (isPassable(rc, dir) && rc.canMove(left)) {
                 rc.move(left);
                 return true;
             }
@@ -312,56 +289,5 @@ public class Pathing {
     static boolean onMLine(MapLocation loc) {
         float epsilon = 3.5f;
         return abs(loc.y - (slope * loc.x + yIntercept)) < epsilon;
-    }
-
-    static boolean bfs(RobotController rc, MapLocation sink) throws GameActionException {
-        // System.out.println("computed: " + parents.size());
-        if (pSink == null || !sink.equals(pSink)) {
-            // System.out.println("clearing BFS");
-            // System.out.println("sink: " + sink);
-            pSink = sink;
-            parents.clear();
-            bfsQ.clear();
-        } else if (bfsQ.size() == 0) {
-            if (!parents.containsKey(sink)) { // initialize sink
-                rc.setIndicatorDot(sink, 255, 0, 0);
-                bfsQ.add(sink);
-                parents.put(sink, undefined_loc);
-            } else if (hidden.size() > 0) {
-                MapLocation tile = hidden.remove();
-                if (map[tile.x][tile.y] != M_HIDDEN) {
-                    bfsQ.add(tile);
-                } else {
-                    hidden.add(tile);
-                }
-            }
-        } else if (bfsQ.size() > 0){
-            MapLocation next = bfsQ.remove();
-            if (map[next.x][next.y] == M_WALL) {
-                parents.remove(next);
-                return false;
-            }
-            rc.setIndicatorDot(next, 0, 255, 0);
-            for (int i = directions.length; --i >= 0;) {
-                MapLocation adj = next.add(directions[i]);
-                if (!rc.onTheMap(adj))
-                    continue;
-                byte tile = map[adj.x][adj.y];
-                switch (tile) {
-                    case M_HIDDEN:
-                        parents.put(adj, next);
-                        hidden.add(adj);
-                        continue;
-                    case M_WALL:
-                        continue;
-                    default:
-                }
-                if (!parents.containsKey(adj)) {
-                    bfsQ.add(adj);
-                    parents.put(adj, next);
-                }
-            }
-        }
-        return false;
     }
 }

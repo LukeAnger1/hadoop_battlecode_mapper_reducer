@@ -1,22 +1,19 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
-import static dev.Communication.*;
-import static dev.Moves.Attack.attackLowestInRange;
-import static dev.Moves.Build.buildTrapIfEnoughPlayers;
-import static dev.Moves.Build.fillLattice;
-import static dev.Moves.Build.farmBuildingLevel;
-import static dev.Moves.Heal.healLowestAllyInRange;
+import static Sprint1.Communication.*;
+import static Sprint1.Moves.Attack.attackLowestInRange;
+import static Sprint1.Moves.Build.buildTrapIfEnoughPlayers;
+import static Sprint1.Moves.Build.fillEverything;
+import static Sprint1.Moves.Heal.healLowestAllyInRange;
 
-import static dev.Moves.Defend.alertLocIfUnderAttack;
-import static dev.Moves.Movement.moveRandomly;
+import static Sprint1.Moves.Defend.alertLocIfUnderAttack;
 
-import static dev.RobotPlayer.rng;
-import static dev.Parameters.*;
-import static dev.Moves.Movement.moveRandomly;
+import static Sprint1.RobotPlayer.rng;
+import static Sprint1.Parameters.*;
 
 public class CamperBot extends BaseBot {
 
@@ -37,7 +34,7 @@ public class CamperBot extends BaseBot {
     @Override
     public void setupTurn(RobotController rc) throws GameActionException {
         buildTrapIfEnoughPlayers(rc, CAMPER_ENEMY_THRESHOLD_SETUP_STUN, CAMPER_ENEMY_THRESHOLD_SETUP_BOMB);
-        fillLattice(rc);
+        fillEverything(rc);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class CamperBot extends BaseBot {
             }
             updateSymmetry(rc);
             if (rng.nextInt() % 8 == 0) {
-                fillLattice(rc);
+                fillEverything(rc);
             }
 
             Communication.markUnderAttackLocationAsFree(rc);

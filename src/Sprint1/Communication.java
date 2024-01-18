@@ -1,7 +1,7 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.*;
-import static dev.Parameters.*;
+import static Sprint1.Parameters.*;
 
 public strictfp class Communication {
     // Index: what is stored
@@ -18,8 +18,8 @@ public strictfp class Communication {
     static int underAttackLocationMask = 0b1111111111110;
     static int underAttackLocationShift = 1;
 
-    public enum Symmetry {
-        HORIZONTAL, VERTICAL, ROTATIONAL, NOTKNOWN
+    enum Symmetry {
+        HORIZONTAL, VERTICAL, ROTATIONAL
     }
 
     enum Role {
@@ -147,8 +147,6 @@ public strictfp class Communication {
             case ROTATIONAL:
                 symmetry |= rotationalMask;
                 break;
-            case NOTKNOWN:
-                break;
         }
         if (rc.canWriteSharedArray(4, symmetry)) rc.writeSharedArray(4, symmetry);
     }
@@ -160,15 +158,6 @@ public strictfp class Communication {
         symmetry[1] = (symmetryInt & verticalMask) == 0;
         symmetry[2] = (symmetryInt & rotationalMask) == 0;
         return symmetry;
-    }
-
-    public static Symmetry onlyOneSymmetry(RobotController rc) throws GameActionException {
-        // returns a symmetry if we have narrowed it down to only one
-        boolean[] symmetry = getSymmetry(rc);
-        if (symmetry[0] && !symmetry[1] && !symmetry[2]) return Symmetry.HORIZONTAL;
-        if (!symmetry[0] && symmetry[1] && !symmetry[2]) return Symmetry.VERTICAL;
-        if (!symmetry[0] && !symmetry[1] && symmetry[2]) return Symmetry.ROTATIONAL;
-        return Symmetry.NOTKNOWN;
     }
 
     public static boolean underAttack(RobotController rc) throws GameActionException {

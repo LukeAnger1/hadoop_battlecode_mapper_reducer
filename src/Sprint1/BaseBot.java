@@ -1,24 +1,19 @@
-package dev;
+package Sprint1;
 
 import battlecode.common.*;
-import dev.Communication.Role;
+import Sprint1.Communication.Role;
 
 import java.util.HashSet;
 
-import static dev.Communication.getUnderAttackLocation;
-import static dev.Communication.underAttack;
-import static dev.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Build.fillLattice;
-import static dev.Moves.Build.goToNearbyCrumbsAndFillWater;
-import static dev.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
-import static dev.Moves.Utils.getHorizontalLineReflection;
-import static dev.Moves.Utils.getRotationalReflection;
-import static dev.Moves.Utils.getVerticalLineReflection;
-import static dev.Moves.Utils.spawnLocationGroupFinder;
-import static dev.Moves.Movement.moveRandomParticle;
-import static dev.RobotPlayer.directions;
-import static dev.RobotPlayer.rng;
-import static dev.RobotPlayer.BFSSink;
+import static Sprint1.Communication.getUnderAttackLocation;
+import static Sprint1.Communication.underAttack;
+import static Sprint1.Moves.Attack.attackWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Build.fillEverything;
+import static Sprint1.Moves.Build.goToNearbyCrumbsAndFillWater;
+import static Sprint1.Moves.Heal.healWithPriorityTo_Flag_InRange_Lowest;
+import static Sprint1.Moves.Utils.spawnLocationGroupFinder;
+import static Sprint1.RobotPlayer.directions;
+import static Sprint1.RobotPlayer.rng;
 
 public class BaseBot {
 
@@ -77,9 +72,8 @@ public class BaseBot {
 
         if (rc.isSpawned()) {
             goToNearbyCrumbsAndFillWater(rc);
-            fillLattice(rc);
+            fillEverything(rc);
             updateSymmetry(rc);
-			moveRandomParticle(rc);
         }
     }
 
@@ -159,7 +153,7 @@ public class BaseBot {
 
         // gets the next spawn from the last
         MapLocation spawnWeWant = spawns[duckNumber % 3];
-        
+
 
         for (MapLocation loc : spawnLocs) {
             if (loc.isWithinDistanceSquared(spawnWeWant, 8) && rc.canSpawn(loc)) {
@@ -168,12 +162,6 @@ public class BaseBot {
                 horizontalMirrorLocation = new MapLocation(loc.x, rc.getMapHeight() - loc.y - 1);
                 verticalMirrorLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, loc.y);
                 rc.spawn(loc);
-                if (BFSSink == null) {
-                    // System.out.println(loc);
-                    // System.out.println(spawnWeWant);
-                    BFSSink = spawnWeWant;
-                    // System.out.println(spawnLocation);
-                }
             }
         }
     }
@@ -191,9 +179,9 @@ public class BaseBot {
             for (MapLocation loc : spawnLocs) {
                 if (rc.canSpawn(loc)) {
                     spawnLocation = loc;
-                    oppositeOfSpawnLocation = getRotationalReflection(rc, loc);
-                    horizontalMirrorLocation = getHorizontalLineReflection(rc, loc);
-                    verticalMirrorLocation = getVerticalLineReflection(rc, loc);
+                    oppositeOfSpawnLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, rc.getMapHeight() - loc.y - 1);
+                    horizontalMirrorLocation = new MapLocation(loc.x, rc.getMapHeight() - loc.y - 1);
+                    verticalMirrorLocation = new MapLocation(rc.getMapWidth() - loc.x - 1, loc.y);
                     rc.spawn(loc);
                 }
             }
@@ -221,37 +209,8 @@ public class BaseBot {
         }
     }
 
-    // seems sus NGL
-    public static void navigateToPossibleSpawnLocation(RobotController rc) throws GameActionException {
+    public static void navigateToPossibleEnemyFlagLocations(RobotController rc) throws GameActionException {
         enemySpawnLocations = Communication.getEnemySpawnLocations(rc);
-        // bubble sort spawn locations i.e.
-        // https://stackoverflow.com/questions/13040240/fastest-way-to-sort-3-values-in-java
-        /*
-        if (a > b)
-            swap(a,b)
-        if (b > c)
-            swap(b,c)
-        if (a > b)
-            swap(a,b)
-         */
-        if (enemySpawnLocations[0] != null && enemySpawnLocations[1] != null && enemySpawnLocations[2] != null) {
-            MapLocation tmp;
-            if (rc.getLocation().distanceSquaredTo(enemySpawnLocations[0]) > rc.getLocation().distanceSquaredTo(enemySpawnLocations[1])) {
-                tmp = enemySpawnLocations[0];
-                enemySpawnLocations[0] = enemySpawnLocations[1];
-                enemySpawnLocations[1] = tmp;
-            }
-            if (rc.getLocation().distanceSquaredTo(enemySpawnLocations[1]) > rc.getLocation().distanceSquaredTo(enemySpawnLocations[2])) {
-                tmp = enemySpawnLocations[1];
-                enemySpawnLocations[1] = enemySpawnLocations[2];
-                enemySpawnLocations[2] = tmp;
-            }
-            if (rc.getLocation().distanceSquaredTo(enemySpawnLocations[0]) > rc.getLocation().distanceSquaredTo(enemySpawnLocations[1])) {
-                tmp = enemySpawnLocations[0];
-                enemySpawnLocations[0] = enemySpawnLocations[1];
-                enemySpawnLocations[1] = tmp;
-            }
-        }
         for (MapLocation loc : enemySpawnLocations) {
             if (loc != null && !visitedEnemyLocations.contains(loc)) {
                 navigateTo(rc, loc);
@@ -276,45 +235,6 @@ public class BaseBot {
             if (flagPossibleLocations.length > 0) {
                 navigateTo(rc, flagPossibleLocations[0]);
             }
-        }
-    }
-
-    public static void navigateToPossibleEnemyFlagLocations(RobotController rc) throws GameActionException {
-        MapLocation[] flags = rc.senseBroadcastFlagLocations();
-        switch (flags.length) {
-            case 0:
-                navigateToPossibleSpawnLocation(rc);
-                break;
-            case 1:
-                navigateTo(rc, flags[0]);
-                break;
-            case 2:
-                MapLocation tmp;
-                if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
-                    tmp = flags[0];
-                    flags[0] = flags[1];
-                    flags[1] = tmp;
-                }
-                navigateTo(rc, flags[0]);
-                break;
-            case 3:
-                if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
-                    tmp = flags[0];
-                    flags[0] = flags[1];
-                    flags[1] = tmp;
-                }
-                if (rc.getLocation().distanceSquaredTo(flags[1]) > rc.getLocation().distanceSquaredTo(flags[2])) {
-                    tmp = flags[1];
-                    flags[1] = flags[2];
-                    flags[2] = tmp;
-                }
-                if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
-                    tmp = flags[0];
-                    flags[0] = flags[1];
-                    flags[1] = tmp;
-                }
-                navigateTo(rc, flags[0]);
-                break;
         }
     }
 

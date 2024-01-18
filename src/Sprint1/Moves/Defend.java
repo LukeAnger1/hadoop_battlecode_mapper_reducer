@@ -1,10 +1,10 @@
-package dev.Moves;
+package Sprint1.Moves;
 
 import battlecode.common.*;
-import dev.Communication;
+import Sprint1.Communication;
 
-import static dev.Parameters.GIVE_UP_UNDER_ATTACK_THRESHOLD;
-import static dev.Parameters.UNDER_ATTACK_ENEMY_THRESHOLD;
+import static Sprint1.Parameters.GIVE_UP_UNDER_ATTACK_THRESHOLD;
+import static Sprint1.Parameters.UNDER_ATTACK_ENEMY_THRESHOLD;
 
 public class Defend {
     public static void alertLocIfUnderAttack(RobotController rc) throws GameActionException {

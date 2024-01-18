@@ -35,10 +35,12 @@ public strictfp class RobotPlayer {
                 } else if (rc.getRoundNum() < GameConstants.SETUP_ROUNDS) {
                     bot.setupTurn(rc);
                 } else {
-                    if (rc.canBuyGlobal(GlobalUpgrade.ACTION)) {
-                        rc.buyGlobal(GlobalUpgrade.ACTION);
+                    if (rc.canBuyGlobal(GlobalUpgrade.ATTACK)) {
+                        rc.buyGlobal(GlobalUpgrade.ATTACK);
                     } else if (rc.canBuyGlobal(GlobalUpgrade.HEALING)) {
                         rc.buyGlobal(GlobalUpgrade.HEALING);
+                    } else if (rc.canBuyGlobal(GlobalUpgrade.CAPTURING)){
+                        rc.buyGlobal(GlobalUpgrade.CAPTURING);
                     }
                     bot.move(rc);
                     bot = newRoleIfSpecialized(rc, bot.duckNumber, bot);
