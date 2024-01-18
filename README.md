@@ -34,4 +34,9 @@ hadoop fs -ls /path
 # This is path dependent so for different setups there needs to be different paths
 /home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -file mapper.py    -mapper mapper.py -file reducer.py   -reducer reducer.py -input /input1/matches -output /out1
 
+# This fixes issues with long games
+/home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar     -D mapreduce.task.timeout=1800000     -D mapreduce.task.timeout.enable=true     -D mapreduce.reduce.task.timeout=1800000     -D mapreduce.reduce.task.timeout.enable=true     -file mapper.py     -mapper mapper.py     -file reducer.py     -reducer reducer.py     -input /input2     -output /out21
+
+
+
 # please test your code on subset before uploading to cluster
