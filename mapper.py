@@ -138,14 +138,10 @@ def run_games(bot1_name, bot2_name, maps):
     return results
 
 def extract_winner(text):
-    # Regular expression pattern to match the winner announcement
-    pattern = r"\[server\]\s+([^\s]+)\s+\(.\)\s+wins"
-    
-    # Search for the pattern in the text
-    match = re.search(pattern, text)
-    
-    # If a match is found, return the winner's name
+    # Regular expression to find the line indicating the winner
+    match = re.search(r'([^\s]+)\s+wins', text)
     if match:
+        # Return the name of the winner
         return match.group(1)
     else:
         return "Winner not found"
@@ -205,8 +201,8 @@ if __name__ == '__main__':
                     win_key=key2
                     los_key=key1
                 else:
-                    win_key="issue with winner"
-                    los_key="issue with loser"
+                    win_key=winner
+                    los_key=winner
             
                 # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
                 print('{}\t{}'.format(str(win_key), 1))
