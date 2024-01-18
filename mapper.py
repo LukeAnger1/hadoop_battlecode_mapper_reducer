@@ -201,10 +201,14 @@ if __name__ == '__main__':
                 if winner == bot1_name:
                     win_key=key1
                     los_key=key2
-                else:
+                elif winner == bot2_name:
                     win_key=key2
                     los_key=key1
+                else:
+                    win_key="issue with winner"
+                    los_key="issue with loser"
             
                 # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
                 print('{}\t{}'.format(str(win_key), 1))
                 print('{}\t{}'.format(str(los_key), -1))
+
