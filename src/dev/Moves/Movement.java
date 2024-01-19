@@ -143,7 +143,7 @@ public class Movement {
     }
 
 	public static void returnFlag(RobotController rc) throws GameActionException {
-        if (BFSSink != null && parents.containsKey(rc.getLocation()))
+        if (BFSSink != null && BFSSink.isWithinDistanceSquared(getClosestSpawnLocation(rc), 4) && parents.containsKey(rc.getLocation()))
             navigateTo(rc, BFSSink);
 		else navigateTo(rc, getClosestSpawnLocation(rc));
 	}

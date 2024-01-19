@@ -2,6 +2,7 @@ package dev.Moves;
 
 import battlecode.common.*;
 import static dev.Communication.onlyOneSymmetry;
+import static dev.Communication.updateSymmetryToFalse;
 import dev.Communication.Symmetry;
 
 import static dev.Parameters.MAX_DIST;
@@ -159,5 +160,59 @@ public class Utils {
             }
         }
         return closestEnemy;
+    }
+
+    public static void eliminateSymmetryFast(RobotController rc) throws GameActionException {
+        MapLocation[] spawnLocs = spawnLocationGroupFinder(rc);
+        int[] quadrants = new int[4];
+        boolean removeVertical = false;
+        boolean removeHorizontal = false;
+
+        // Layout:
+        // | 3 | 2 |
+        // | 0 | 1 |
+        for (MapLocation spawnLoc : spawnLocs) {
+            if (spawnLoc.x < rc.getMapWidth() / 2) {
+                if (spawnLoc.y < rc.getMapHeight() / 2) {
+                    quadrants[0]++;
+                } else {
+                    quadrants[3]++;
+                }
+            } else {
+                if (spawnLoc.y < rc.getMapHeight() / 2) {
+                    quadrants[1]++;
+                } else {
+                    quadrants[2]++;
+                }
+            }
+
+            // These may need to be updated
+            int xDiff = rc.getMapWidth() / 2 - spawnLoc.x;
+            if (xDiff >= 0 && xDiff <= 2) {
+                removeVertical = true;
+            }
+
+            int yDiff = rc.getMapHeight() / 2 - spawnLoc.y;
+            if (yDiff >= 0 && yDiff <= 2) {
+                removeHorizontal = true;
+            }
+        }
+
+        // Horizontal Line Reflection Eliminations
+        if (((quadrants[0] >= 1 || quadrants[1] >= 1) && (quadrants[2] >= 1 || quadrants[3] >= 1)) || removeHorizontal) {
+            updateSymmetryToFalse(rc, Symmetry.HORIZONTAL);
+        }
+
+        // Vertical Line Reflection Eliminations
+        if (((quadrants[0] >= 1 || quadrants[3] >= 1) && (quadrants[1] >= 1 || quadrants[2] >= 1)) || removeVertical) {
+            updateSymmetryToFalse(rc, Symmetry.VERTICAL);
+        }
+
+        // Rotational Reflection Eliminations
+        // I'm uncertain this ever even happens but just in case
+        if (quadrants[0] >= 1 && quadrants[2] >= 1 && quadrants[1] == 0 && quadrants[3] == 0) {
+            updateSymmetryToFalse(rc, Symmetry.ROTATIONAL);
+        }
+
     }
 }

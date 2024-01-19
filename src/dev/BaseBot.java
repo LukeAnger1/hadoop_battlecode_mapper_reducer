@@ -128,21 +128,21 @@ public class BaseBot {
         Team enemyTeam = rc.getTeam().opponent();
         // we have to do enemyTeam.ordinal() + 1 because the spawn zone team is 1-indexed :/
         if (rc.canSenseLocation(horizontalMirrorLocation)) {
-            if (rc.senseMapInfo(horizontalMirrorLocation).getSpawnZoneTeam() == enemyTeam) {
+            if (rc.senseMapInfo(horizontalMirrorLocation).getSpawnZoneTeamObject() == enemyTeam) {
                 Communication.updateEnemySpawnLocation(rc, horizontalMirrorLocation);
             } else {
                 Communication.updateSymmetryToFalse(rc, Communication.Symmetry.HORIZONTAL);
             }
         }
         if (rc.canSenseLocation(verticalMirrorLocation)) {
-            if (rc.senseMapInfo(verticalMirrorLocation).getSpawnZoneTeam() == enemyTeam) {
+            if (rc.senseMapInfo(verticalMirrorLocation).getSpawnZoneTeamObject() == enemyTeam) {
                 Communication.updateEnemySpawnLocation(rc, verticalMirrorLocation);
             } else {
                 Communication.updateSymmetryToFalse(rc, Communication.Symmetry.VERTICAL);
             }
         }
         if (rc.canSenseLocation(oppositeOfSpawnLocation)) {
-            if (rc.senseMapInfo(oppositeOfSpawnLocation).getSpawnZoneTeam() == enemyTeam) {
+            if (rc.senseMapInfo(oppositeOfSpawnLocation).getSpawnZoneTeamObject() == enemyTeam) {
                 Communication.updateEnemySpawnLocation(rc, oppositeOfSpawnLocation);
             } else {
                 Communication.updateSymmetryToFalse(rc, Communication.Symmetry.ROTATIONAL);
@@ -171,7 +171,7 @@ public class BaseBot {
                 if (BFSSink == null) {
                     // System.out.println(loc);
                     // System.out.println(spawnWeWant);
-                    BFSSink = spawnWeWant;
+                    BFSSink = spawnWeWant.add(directions[1]);
                     // System.out.println(spawnLocation);
                 }
             }
@@ -256,7 +256,7 @@ public class BaseBot {
             if (loc != null && !visitedEnemyLocations.contains(loc)) {
                 navigateTo(rc, loc);
                 if (rc.getLocation().distanceSquaredTo(loc) <= 2) visitedEnemyLocations.add(loc);
-                break;
+                return;
             }
         }
         if (mirrors[2] && !visitedEnemyLocations.contains(oppositeOfSpawnLocation)) {
@@ -280,53 +280,54 @@ public class BaseBot {
     }
 
     public static void navigateToPossibleEnemyFlagLocations(RobotController rc) throws GameActionException {
-        MapLocation[] flags = rc.senseBroadcastFlagLocations();
-        switch (flags.length) {
-            case 0:
-                navigateToPossibleSpawnLocation(rc);
-                break;
-            case 1:
-                navigateTo(rc, flags[0]);
-                break;
-            case 2:
-                MapLocation tmp;
-                if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
-                    tmp = flags[0];
-                    flags[0] = flags[1];
-                    flags[1] = tmp;
-                }
-                navigateTo(rc, flags[0]);
-                break;
-            case 3:
-                if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
-                    tmp = flags[0];
-                    flags[0] = flags[1];
-                    flags[1] = tmp;
-                }
-                if (rc.getLocation().distanceSquaredTo(flags[1]) > rc.getLocation().distanceSquaredTo(flags[2])) {
-                    tmp = flags[1];
-                    flags[1] = flags[2];
-                    flags[2] = tmp;
-                }
-                if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
-                    tmp = flags[0];
-                    flags[0] = flags[1];
-                    flags[1] = tmp;
-                }
-                navigateTo(rc, flags[0]);
-                break;
-        }
+        navigateToPossibleSpawnLocation(rc);
+        // MapLocation[] flags = rc.senseBroadcastFlagLocations();
+        // switch (flags.length) {
+        //     case 0:
+        //         navigateToPossibleSpawnLocation(rc);
+        //         break;
+        //     case 1:
+        //         navigateTo(rc, flags[0]);
+        //         break;
+        //     case 2:
+        //         MapLocation tmp;
+        //         if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
+        //             tmp = flags[0];
+        //             flags[0] = flags[1];
+        //             flags[1] = tmp;
+        //         }
+        //         navigateTo(rc, flags[0]);
+        //         break;
+        //     case 3:
+        //         if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
+        //             tmp = flags[0];
+        //             flags[0] = flags[1];
+        //             flags[1] = tmp;
+        //         }
+        //         if (rc.getLocation().distanceSquaredTo(flags[1]) > rc.getLocation().distanceSquaredTo(flags[2])) {
+        //             tmp = flags[1];
+        //             flags[1] = flags[2];
+        //             flags[2] = tmp;
+        //         }
+        //         if (rc.getLocation().distanceSquaredTo(flags[0]) > rc.getLocation().distanceSquaredTo(flags[1])) {
+        //             tmp = flags[0];
+        //             flags[0] = flags[1];
+        //             flags[1] = tmp;
+        //         }
+        //         navigateTo(rc, flags[0]);
+        //         break;
+        // }
     }
 
-    public static void pickUpFlags(RobotController rc) throws GameActionException {
-        FlagInfo[] flags = rc.senseNearbyFlags(GameConstants.INTERACT_RADIUS_SQUARED, rc.getTeam().opponent());
-        for (FlagInfo flag : flags) {
-            if (rc.canPickupFlag(flag.getLocation())) {
-                rc.pickupFlag(flag.getLocation());
-                rc.setIndicatorString("Holding a flag!");
-            }
-        }
-    }
+    // public static void pickUpFlags(RobotController rc) throws GameActionException {
+    //     FlagInfo[] flags = rc.senseNearbyFlags(GameConstants.INTERACT_RADIUS_SQUARED, rc.getTeam().opponent());
+    //     for (FlagInfo flag : flags) {
+    //         if (rc.canPickupFlag(flag.getLocation())) {
+    //             rc.pickupFlag(flag.getLocation());
+    //             rc.setIndicatorString("Holding a flag!");
+    //         }
+    //     }
+    // }
 
     public static void goToClosestNearbyFlagAndPickup(RobotController rc) throws GameActionException {
         FlagInfo[] flags = rc.senseNearbyFlags(-1, rc.getTeam().opponent());
@@ -346,10 +347,15 @@ public class BaseBot {
             }
         }
         if (closestFlag != null) {
-            navigateTo(rc, closestFlag.getLocation());
-            MapLocation closestFlagLoc = closestFlag.getLocation();
-            if (rc.canPickupFlag(closestFlagLoc)) {
-                rc.pickupFlag(closestFlagLoc);
+            MapLocation loc = closestFlag.getLocation();
+            if (!rc.canSenseRobotAtLocation(loc)) {
+                if (rc.canPickupFlag(loc)) {
+                    rc.pickupFlag(loc);
+                }
+                navigateTo(rc, loc);
+                if (rc.canPickupFlag(loc)) {
+                    rc.pickupFlag(loc);
+                }
             }
         }
     }

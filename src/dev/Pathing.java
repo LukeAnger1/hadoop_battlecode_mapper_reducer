@@ -35,20 +35,22 @@ public class Pathing {
     // Navigation
     static void navigateTo(RobotController rc, MapLocation loc) throws GameActionException {
         rc.setIndicatorLine(rc.getLocation(), loc, 255, 0, 0);
-        if (BFSSink != null && loc.isWithinDistanceSquared(BFSSink, 4) && rc.isMovementReady() && bot.getRole() != Role.CAMPER) {
-            MapLocation me = rc.getLocation();
-            if (parents.containsKey(me)) {
-                MapLocation goal = parents.get(me);
-        		rc.setIndicatorLine(rc.getLocation(), goal, 0, 255, 0);
-                tryMove(rc, me.directionTo(goal));
-                while (goal != null && goal != BFSSink) {
-                    rc.setIndicatorDot(goal, 255, 0, 0);
-                    goal = parents.get(goal);
-                }
-            }
-        } else if (rc.isMovementReady()) {
-            bug2(rc, loc);
-        }
+		if (rc.isMovementReady()) {
+     	   if (BFSSink != null && loc.equals(BFSSink) && bot.getRole() != Role.CAMPER) {
+     	        MapLocation me = rc.getLocation();
+     	        if (parents.containsKey(me)) {
+     	            MapLocation goal = parents.get(me);
+				    rc.setIndicatorLine(rc.getLocation(), goal, 0, 255, 0);
+     	            tryMove(rc, me.directionTo(goal));
+     	            while (goal != null && goal != BFSSink) {
+     	                rc.setIndicatorDot(goal, 255, 0, 0);
+     	                goal = parents.get(goal);
+     	            }
+     	        }
+     	    } else {
+     	        bug2(rc, loc);
+     	   }
+		}
     }
 
 	static boolean isPassable(RobotController rc, Direction dir) throws GameActionException {
@@ -327,7 +329,11 @@ public class Pathing {
                 rc.setIndicatorDot(sink, 255, 0, 0);
                 bfsQ.add(sink);
                 parents.put(sink, undefined_loc);
-            } else if (hidden.size() > 0) {
+            } else if (!rc.isSpawned()) {    
+                parents.clear();
+                bfsQ.clear();
+            }
+            else if (hidden.size() > 10) {
                 MapLocation tile = hidden.remove();
                 if (map[tile.x][tile.y] != M_HIDDEN) {
                     bfsQ.add(tile);
