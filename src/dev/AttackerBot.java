@@ -44,15 +44,20 @@ public class AttackerBot extends BaseBot {
         if (rc.isSpawned()){
             updateSymmetry(rc);
 
-            // pick up any we are in range for and head back
-            pickUpFlags(rc);
+            // // pick up any we are in range for and head back
+            // pickUpFlags(rc);
+
+            // dont mess up our own flag holders
+            dontBlockFlagHolders(rc);
+
+            // go to any flags we see
+            goToClosestNearbyFlagAndPickup(rc);
             boolean haveEnemyFlag = rc.hasFlag();
             if (haveEnemyFlag) {
 				returnFlag(rc);
+				return;
             }
             
-            // dont mess up our own flag holders
-            dontBlockFlagHolders(rc);
 //            if (rc.getHealth() < RETREAT_HEALTH_THRESHOLD){
 //                retreat(rc);
 //            }
@@ -63,8 +68,6 @@ public class AttackerBot extends BaseBot {
             attackWithPriorityTo_Flag_InRange_Lowest(rc);
             healWithPriorityTo_Flag_InRange_Lowest(rc);
 
-            // go to any flags we see
-            goToClosestNearbyFlagAndPickup(rc);
             // crumbs
             goToNearbyCrumbsAndFillWater(rc);
             // go to flag

@@ -159,6 +159,10 @@ public strictfp class Communication {
         symmetry[0] = (symmetryInt & horizontalMask) == 0;
         symmetry[1] = (symmetryInt & verticalMask) == 0;
         symmetry[2] = (symmetryInt & rotationalMask) == 0;
+        // Safeguard / Debug
+        if (!symmetry[0] && !symmetry[1] && !symmetry[2]) {
+            System.out.println("ALL SYMMETRIES ELIMINATED, FUCK");
+        }
         return symmetry;
     }
 

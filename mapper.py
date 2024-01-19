@@ -132,19 +132,23 @@ def run_games(bot1_name, bot2_name, maps):
     results = []
     for map in maps:
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
-        result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        result = extract_winner(repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')))
         # This will extract the winner
         results.append(result)
     return results
 
 def extract_winner(text):
-    # Regular expression to find the line indicating the winner
-    match = re.search(r'([^\s]+)\s+wins', text)
-    if match:
-        # Return the name of the winner
-        return match.group(1)
+    # TODO: abstract dev1 and dev2
+    count_dev1 = text.count('dev1')
+    count_dev2 = text.count('dev2')
+
+    if count_dev1 > count_dev2:
+        return 'dev1'
+    elif count_dev2 > count_dev1:
+        return 'dev2'
     else:
-        return "Winner not found"
+        # TODO: change this to a variable
+        return "tie"
 
 # The below is an example command to run games
 # print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
@@ -158,8 +162,8 @@ if __name__ == '__main__':
         bot2_name_old, bot2_vars_old, bot2_combo_old = bot2_info_old
 
         # this is to rename bots to prevent conflict
-        bot1_name = bot1_name_old + 'a'
-        bot2_name = bot2_name_old + 'b'
+        bot1_name = bot1_name_old + '1'
+        bot2_name = bot2_name_old + '2'
 
         # this code is to change in in files
         bot1_vars = list(bot1_vars_old)
@@ -181,13 +185,13 @@ if __name__ == '__main__':
 
         bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
-        
+
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
 
         for winner in results:
-            
-            if winner == "Winner not found":
+
+            if winner == "tie":
                 print('{}\t{}'.format("issue", 1))
             else:
 
@@ -203,7 +207,7 @@ if __name__ == '__main__':
                 else:
                     win_key=winner
                     los_key=winner
-            
+
                 # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
                 print('{}\t{}'.format(str(win_key), 1))
                 print('{}\t{}'.format(str(los_key), -1))

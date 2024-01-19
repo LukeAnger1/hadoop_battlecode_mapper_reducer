@@ -13,7 +13,7 @@ import static dev.Moves.Heal.healLowestAllyInRange;
 
 import static dev.Moves.Defend.alertLocIfUnderAttack;
 import static dev.Moves.Movement.moveRandomly;
-
+import static dev.Moves.Utils.eliminateSymmetryFast;
 import static dev.RobotPlayer.rng;
 import static dev.Parameters.*;
 import static dev.Moves.Movement.moveRandomly;
@@ -31,6 +31,7 @@ public class CamperBot extends BaseBot {
         firstSpawn(rc, duckNumber);
         navigateTo(rc, rc.senseNearbyFlags(4)[0].getLocation());
         campingSpot = rc.getLocation();
+        eliminateSymmetryFast(rc);
         rc.setIndicatorString("Camper: Going to Flag");
     }
 

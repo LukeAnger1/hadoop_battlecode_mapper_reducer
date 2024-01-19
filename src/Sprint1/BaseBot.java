@@ -122,21 +122,21 @@ public class BaseBot {
         Team enemyTeam = rc.getTeam().opponent();
         // we have to do enemyTeam.ordinal() + 1 because the spawn zone team is 1-indexed :/
         if (rc.canSenseLocation(horizontalMirrorLocation)) {
-            if (rc.senseMapInfo(horizontalMirrorLocation).getSpawnZoneTeam() == enemyTeam) {
+            if (rc.senseMapInfo(horizontalMirrorLocation).getSpawnZoneTeamObject() == enemyTeam) {
                 Communication.updateEnemySpawnLocation(rc, horizontalMirrorLocation);
             } else {
                 Communication.updateSymmetryToFalse(rc, Communication.Symmetry.HORIZONTAL);
             }
         }
         if (rc.canSenseLocation(verticalMirrorLocation)) {
-            if (rc.senseMapInfo(verticalMirrorLocation).getSpawnZoneTeam() == enemyTeam) {
+            if (rc.senseMapInfo(verticalMirrorLocation).getSpawnZoneTeamObject() == enemyTeam) {
                 Communication.updateEnemySpawnLocation(rc, verticalMirrorLocation);
             } else {
                 Communication.updateSymmetryToFalse(rc, Communication.Symmetry.VERTICAL);
             }
         }
         if (rc.canSenseLocation(oppositeOfSpawnLocation)) {
-            if (rc.senseMapInfo(oppositeOfSpawnLocation).getSpawnZoneTeam() == enemyTeam) {
+            if (rc.senseMapInfo(oppositeOfSpawnLocation).getSpawnZoneTeamObject() == enemyTeam) {
                 Communication.updateEnemySpawnLocation(rc, oppositeOfSpawnLocation);
             } else {
                 Communication.updateSymmetryToFalse(rc, Communication.Symmetry.ROTATIONAL);

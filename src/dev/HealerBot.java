@@ -44,11 +44,12 @@ public class HealerBot extends BaseBot {
             updateSymmetry(rc);
             // alert of (approx) spawn loc under attack if enough enemies are nearby
 
-            // pick up any we are in range for and head back
-            pickUpFlags(rc);
+            // go to any flags we see
+            goToClosestNearbyFlagAndPickup(rc);
             boolean haveEnemyFlag = rc.hasFlag();
             if (haveEnemyFlag) {
 				returnFlag(rc);
+				return;
             }
 
             
@@ -64,8 +65,6 @@ public class HealerBot extends BaseBot {
             healWithPriorityTo_Flag_InRange_Lowest(rc);
             attackWithPriorityTo_Flag_InRange_Lowest(rc);
 
-            // go to any flags we see
-            goToClosestNearbyFlagAndPickup(rc);
             // crumbs
             goToNearbyCrumbsAndFillWater(rc);
             // go to flag
@@ -73,7 +72,6 @@ public class HealerBot extends BaseBot {
             if (rng.nextInt() % 8 == 0) {
                 fillLattice(rc);
             }
-
 
             moveRandomParticle(rc);
             Communication.markUnderAttackLocationAsFree(rc);

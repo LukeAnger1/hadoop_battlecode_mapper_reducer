@@ -60,11 +60,14 @@ public class BuilderBot extends BaseBot {
             }
 
             updateSymmetry(rc);
-            // pick up any we are in range for and head back
-            pickUpFlags(rc);
+
+            // go to any flags we see
+            goToClosestNearbyFlagAndPickup(rc);
+
             boolean haveEnemyFlag = rc.hasFlag();
             if (haveEnemyFlag) {
 				returnFlag(rc);
+				return;
             }
             
             
@@ -82,8 +85,6 @@ public class BuilderBot extends BaseBot {
             attackWithPriorityTo_Flag_InRange_Lowest(rc);
             healWithPriorityTo_Flag_InRange_Lowest(rc);
 
-            // go to any flags we see
-            goToClosestNearbyFlagAndPickup(rc);
             // crumbs
             goToNearbyCrumbsAndFillWater(rc);
             // go to flag
@@ -92,6 +93,7 @@ public class BuilderBot extends BaseBot {
                 fillLattice(rc);
             }
             Communication.markUnderAttackLocationAsFree(rc);
+        	farmBuildingLevel(rc, 1);
         }
     }
 
