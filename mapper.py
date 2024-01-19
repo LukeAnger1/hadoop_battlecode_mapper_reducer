@@ -29,6 +29,7 @@ import subprocess
 import os
 import shutil
 import re
+import socket
 
 bot_seperator = '\n'
 bot_type_sperator = '|'
@@ -132,8 +133,10 @@ def run_games(bot1_name, bot2_name, maps):
     results = []
     for map in maps:
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
-        result = extract_winner(repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')))
-        # This will extract the winner
+        # remove below later
+        result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        # The below line is to prevent data loss, we can just see long ass file
+        print('{}\t{}'.format(str(result), 1))
         results.append(result)
     return results
 
@@ -197,10 +200,13 @@ if __name__ == '__main__':
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
 
-        for winner in results:
+        for result in results:
+            winner = extract_winner(result)
 
             if winner == "tie":
-                print('{}\t{}'.format("issue", 1))
+                # Adding logic to get more information about the issue
+
+                print('{}\t{}'.format("issue on hostname " + str(socket.gethostname() + str(result)), 1))
             else:
 
                 key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
