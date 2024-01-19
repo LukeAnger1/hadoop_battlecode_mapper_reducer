@@ -1,1 +1,2 @@
-dev | ARAM .  Cups  .    helicopter .  navtest1 .  simple1  . smiles .  two_moats . BC24 .  Football  . league   .   rabbit .   simple2 .  tunnels | <?var1?> ->     (0, 1)    .     <?var2?> ->[1, 2] . <?var3?> ->[1, 2, 3] . <?var4?> ->[3, 4, 5] . <?var5?> ->[0] . <?var6?> ->[0]  .   <?var7?> ->[1] . <?var8?> ->[3] . <?var9?> ->[5, 10, 15, 20] . <?var10?> ->[5, 10, 15, 20] .  <?var11?> ->[5, 10, 15, 20] . <?var12?> ->[5, 10, 15, 20] . <?var13?> -> [1]   .  <?var14?>  -> [8]
+Lv | DefaultSmall   .  DefaultMedium   .   DefaultLarge . DefaultHuge | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4] . var3->range(1, 2, 3)
+Lv | DefaultSmall   .  DefaultMedium   .   DefaultLarge | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]
