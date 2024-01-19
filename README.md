@@ -37,6 +37,10 @@ hadoop fs -ls /path
 
 # This fixes issues with long games
 /home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar     -D mapreduce.task.timeout=1800000     -D mapreduce.task.timeout.enable=true     -D mapreduce.reduce.task.timeout=1800000     -D mapreduce.reduce.task.timeout.enable=true     -file mapper.py     -mapper mapper.py     -file reducer.py     -reducer reducer.py     -input /input2     -output /out21
+# another example
+/home/help/hadoop/bin/hadoop jar /home/help/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar -D mapreduce.task.timeout.enable=true -D mapreduce.task.timeout=2700000 -D mapreduce.reduce.task.timeout.enable=true -D mapreduce.reduce.task.timeout=2700000 -file mapper.py -mapper mapper.py -file reducer.py -reducer reducer.py -input /input/4/matches -output /out/matches4
+# this is how to make matches ex
+cat input.txt | python3 make_matches.py -n 25 -m 2
 
 
 
