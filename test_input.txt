@@ -1,2 +1,0 @@
-Lv | DefaultSmall   .  DefaultMedium   .   DefaultLarge . DefaultHuge | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4] . var3->range(1, 2, 3)
-Lv | DefaultSmall   .  DefaultMedium   .   DefaultLarge | var1 ->     (1, 2, 3)    .     var2->[1, 2, 3, 4]

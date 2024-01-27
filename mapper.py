@@ -29,6 +29,7 @@ import subprocess
 import os
 import shutil
 import re
+import socket
 
 bot_seperator = '\n'
 bot_type_sperator = '|'
@@ -45,12 +46,12 @@ def get_all_combinations_one_bot(replace_range):
 # This will pick random ones within the range
 def get_rand_combinations_one_bot(replace_range, number_combination):
     return random.sample(get_all_combinations_one_bot(replace_range), number_combination)
-    
+
 # TODO: The current is just for testing and should be switched later
-folder_with_gradlew = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg"
-bot_source_file_folder_with_dummy_variables = "/mnt/c/Users/anger/OneDrive/Desktop/bc" # this is the folder to look for the bots (any bot name should have a file in this folder) that need to variables to be replaced
+folder_with_gradlew = "/home/hduser/yaro"
+bot_source_file_folder_with_dummy_variables = "/home/hduser/battlecode_beasts/src" # this is the folder to look for the bots (any b>
 # IMPORTANT make sure the below file is right it will delete all bots!!!!
-bot_source_file_folder = "/mnt/c/Users/anger/OneDrive/Desktop/bc/bcg/src" # This is where it puts the modified content, this is what the game will run
+bot_source_file_folder = "/home/hduser/yaro/src" # This is where it puts the modified content, this >
 
 # Function to replace words
 def replace_words_func(text, original, replace):\
@@ -66,20 +67,31 @@ def make_bot(input_folder_path, output_folder_path, original_words, replace_word
     if not os.path.exists(output_folder_path):
         os.makedirs(output_folder_path)
 
-    # Iterate over all files in the input folder
-    for filename in os.listdir(input_folder_path):
-        input_file_path = os.path.join(input_folder_path, filename)
+    for root, dirs, files in os.walk(input_folder_path):
+        # Determine the path to the destination folder
+        dest_folder = os.path.join(output_folder_path, os.path.relpath(root, input_folder_path))
 
-        # Check if it's a file and not a directory
-        if os.path.isfile(input_file_path):
-            with open(input_file_path, 'r') as file:
-                file_content = file.read()
+        # Create the destination folder if it doesn't exist
+        if not os.path.exists(dest_folder):
+            os.makedirs(dest_folder)
 
+        for file_name in files:
+            # Read and modify the content of each file
+            input_file_path = os.path.join(root, file_name)
+            with open(input_file_path, 'r') as file_obj:
+                file_content = file_obj.read()
             modified_content = replace_words_func(file_content, original_words, replace_words)
 
-            output_file_path = os.path.join(output_folder_path, filename)
-            with open(output_file_path, 'w') as file:
-                file.write(modified_content)
+            # Write the modified content to the corresponding file in the output directory
+            output_file_path = os.path.join(dest_folder, file_name)
+            with open(output_file_path, 'w') as file_obj:
+                file_obj.write(modified_content)
+
+        for dir in dirs:
+            # Copy each subdirectory
+            src_dir_path = os.path.join(root, dir)
+            dest_dir_path = os.path.join(dest_folder, dir)
+            shutil.copytree(src_dir_path, dest_dir_path)
 
 def unmake_ALL_bots(folder_path):
     # Check if the folder exists
@@ -106,6 +118,7 @@ def unmake_ALL_bots(folder_path):
 def run_command_in_terminal(command, directory=folder_with_gradlew):
     try:
         # Run the command
+        # print(f'running command {command}')
         result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, stdin=subprocess.DEVNULL, cwd=directory)
 
         # Return the standard output and error
@@ -117,24 +130,36 @@ def run_command_in_terminal(command, directory=folder_with_gradlew):
 # TODO: this is the last bit of code it is going to need to return 
 def run_games(bot1_name, bot2_name, maps):
     # This is what input should look like, not a string ((bot_name1, vars1, combo1), (bot_name2, vars2, combo2), maps)
-    results = ""
+    results = []
     for map in maps:
         # print(f'/gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}')
-        results+=repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        # remove below later
+        result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot1_name} -PteamB={bot2_name}'))
+        # The below line is to prevent data loss, we can just see long ass file
+        print('{}\t{}'.format(str(result), 1))
+        results.append(result)
     return results
 
 def extract_winner(text):
-    # Regular expression pattern to match the winner announcement
-    pattern = r"\[server\]\s+([^\s]+)\s+\(.\)\s+wins"
+    # Split the text into lines
+    lines = text.split('\n')
     
-    # Search for the pattern in the text
-    match = re.search(pattern, text)
-    
-    # If a match is found, return the winner's name
-    if match:
-        return match.group(1)
-    else:
-        return "Winner not found"
+    # Iterate through each line
+    for line in lines:
+        # Check if the line contains the word "wins"
+        if 'wins' in line:
+            # TODO: abstract dev1 and dev2
+            count_dev1 = text.count('dev1')
+            count_dev2 = text.count('dev2')
+
+            if count_dev1 > count_dev2:
+                return 'dev1'
+            elif count_dev2 > count_dev1:
+                return 'dev2'
+            else:
+                # TODO: change this to a variable
+                return "tie"
+    return "tie"
 
 # The below is an example command to run games
 # print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
@@ -148,8 +173,8 @@ if __name__ == '__main__':
         bot2_name_old, bot2_vars_old, bot2_combo_old = bot2_info_old
 
         # this is to rename bots to prevent conflict
-        bot1_name = bot1_name_old + 'a'
-        bot2_name = bot2_name_old + 'b'
+        bot1_name = bot1_name_old + '1'
+        bot2_name = bot2_name_old + '2'
 
         # this code is to change in in files
         bot1_vars = list(bot1_vars_old)
@@ -171,25 +196,33 @@ if __name__ == '__main__':
 
         bot1 = make_bot(bot1_input_folder, bot1_output_folder, bot1_vars, bot1_combo)
         bot2 = make_bot(bot2_input_folder, bot2_output_folder, bot2_vars, bot2_combo)
-        
+
         # TODO: cut these results somewhere, either here or in the reduce
         results = run_games(bot1_name, bot2_name, maps)
-        winner = extract_winner(results)
-        
-        if not winner == "Winner not found":
 
-            key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
-            key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
+        for result in results:
+            winner = extract_winner(result)
 
-            if winner == bot1_name:
-                win_key=key1
-                los_key=key2
+            if winner == "tie":
+                # Adding logic to get more information about the issue
+
+                print('{}\t{}'.format("issue on hostname " + str(socket.gethostname() + str(result)), 1))
             else:
-                win_key=key2
-                los_key=key1
-            
-            # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
-            print('{}\t{}'.format(str(win_key), 1))
-            print('{}\t{}'.format(str(los_key), -1))
 
-    
+                key1 = (bot1_name_old, bot1_vars_old, bot1_combo_old)
+                key2 = (bot2_name_old, bot2_vars_old, bot2_combo_old)
+
+                if winner == bot1_name:
+                    win_key=key1
+                    los_key=key2
+                elif winner == bot2_name:
+                    win_key=key2
+                    los_key=key1
+                else:
+                    win_key=winner
+                    los_key=winner
+
+                # This is what is fed to the reducer, hadoop will sort the keys so we dont need to worry about issues with the reducer, also just converting to str cuz I want
+                print('{}\t{}'.format(str(win_key), 1))
+                print('{}\t{}'.format(str(los_key), -1))
+

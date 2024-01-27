@@ -10,10 +10,13 @@ word = None
 
 # input comes from STDIN
 for line in sys.stdin:
+    # TODO: This is not combining the results the right way for non hadoop running
+
     # remove leading and trailing whitespace
     line = line.strip()
 
     # parse the input we got from mapper.py
+    # print(f'the line is {line} of type {type(line)}')
     word, count = line.split('\t', 1)
 
     # convert count (currently a string) to int
@@ -38,3 +41,4 @@ for line in sys.stdin:
 # do not forget to output the last word if needed!
 if current_word == word:
     print(f'{current_word}\t{current_count}')
+
