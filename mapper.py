@@ -145,9 +145,7 @@ def run_games(bot1_name, bot2_name, maps):
     return results
 
 def extract_winner(text):
-    # Split the text into lines
-    lines = text.split('\n')
-    
+ 
     # TODO: abstract dev1 and dev2
     count_dev1 = text.count("dev1 (")
     count_dev2 = text.count("dev2 (")
@@ -159,7 +157,6 @@ def extract_winner(text):
     else:
         # TODO: change this to a variable
         return "tie"
-    return "tie"
 
 # The below is an example command to run games
 # print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
