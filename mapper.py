@@ -153,8 +153,8 @@ def extract_winner(text):
         # Check if the line contains the word "wins"
         if 'wins' in line:
             # TODO: abstract dev1 and dev2
-            count_dev1 = text.count('dev1')
-            count_dev2 = text.count('dev2')
+            count_dev1 = text.count("dev1 (")
+            count_dev2 = text.count("dev2 (")
 
             if count_dev1 > count_dev2:
                 return 'dev1'
