@@ -148,21 +148,17 @@ def extract_winner(text):
     # Split the text into lines
     lines = text.split('\n')
     
-    # Iterate through each line
-    for line in lines:
-        # Check if the line contains the word "wins"
-        if 'wins' in line:
-            # TODO: abstract dev1 and dev2
-            count_dev1 = text.count("dev1 (")
-            count_dev2 = text.count("dev2 (")
+    # TODO: abstract dev1 and dev2
+    count_dev1 = text.count("dev1 (")
+    count_dev2 = text.count("dev2 (")
 
-            if count_dev1 > count_dev2:
-                return 'dev1'
-            elif count_dev2 > count_dev1:
-                return 'dev2'
-            else:
-                # TODO: change this to a variable
-                return "tie"
+    if count_dev1 > count_dev2:
+        return 'dev1'
+    elif count_dev2 > count_dev1:
+        return 'dev2'
+    else:
+        # TODO: change this to a variable
+        return "tie"
     return "tie"
 
 # The below is an example command to run games
