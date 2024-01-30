@@ -138,6 +138,10 @@ def run_games(bot1_name, bot2_name, maps):
         # The below line is to prevent data loss, we can just see long ass file
         print('{}\t{}'.format(str(result), 1))
         results.append(result)
+        result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot2_name} -PteamB={bot1_name}'))
+        # The below line is to prevent data loss, we can just see long ass file
+        print('{}\t{}'.format(str(result), 1))
+        results.append(result)
     return results
 
 def extract_winner(text):
