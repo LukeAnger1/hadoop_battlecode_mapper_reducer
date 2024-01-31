@@ -138,28 +138,25 @@ def run_games(bot1_name, bot2_name, maps):
         # The below line is to prevent data loss, we can just see long ass file
         print('{}\t{}'.format(str(result), 1))
         results.append(result)
+        result = repr(run_command_in_terminal(f'./gradlew run -Pmaps={map} -PteamA={bot2_name} -PteamB={bot1_name}'))
+        # The below line is to prevent data loss, we can just see long ass file
+        print('{}\t{}'.format(str(result), 1))
+        results.append(result)
     return results
 
-def extract_winner(text):
-    # Split the text into lines
-    lines = text.split('\n')
-    
-    # Iterate through each line
-    for line in lines:
-        # Check if the line contains the word "wins"
-        if 'wins' in line:
-            # TODO: abstract dev1 and dev2
-            count_dev1 = text.count('dev1')
-            count_dev2 = text.count('dev2')
+def extract_winner(text, bot1_name, bot2_name):
+ 
+    # TODO: abstract dev1 and dev2
+    count_dev1 = text.count("1 (")
+    count_dev2 = text.count("2 (")
 
-            if count_dev1 > count_dev2:
-                return 'dev1'
-            elif count_dev2 > count_dev1:
-                return 'dev2'
-            else:
-                # TODO: change this to a variable
-                return "tie"
-    return "tie"
+    if count_dev1 > count_dev2:
+        return bot1_name
+    elif count_dev2 > count_dev1:
+        return bot2_name
+    else:
+        # TODO: change this to a variable
+        return "tie"
 
 # The below is an example command to run games
 # print(run_games((("Lv1", "dumby", "dumby"), ("Lv1", "dumby", "dumby"), ["DefaultSmall", "DefaultMedium", "DefaultLarge", "DefaultHuge"])))
@@ -201,7 +198,7 @@ if __name__ == '__main__':
         results = run_games(bot1_name, bot2_name, maps)
 
         for result in results:
-            winner = extract_winner(result)
+            winner = extract_winner(result, bot1_name, bot2_name)
 
             if winner == "tie":
                 # Adding logic to get more information about the issue
